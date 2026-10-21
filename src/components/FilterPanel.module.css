@@ -1,0 +1,227 @@
+/* ── FilterPanel — scrapbook sidebar style ──────────────────
+   Reuses the same chip tokens from ActivityGrid.module.css
+   ─────────────────────────────────────────────────────────── */
+
+.panel {
+  background: var(--cream);
+  border: 1.5px solid rgba(26,16,48,0.20);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  /* slight warm shadow — matches card style */
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.12);
+  /* rotated graph-paper background to match body */
+  background-image:
+    linear-gradient(rgba(15,10,30,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,10,30,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: sticky;
+  top: calc(70px + var(--space-4)); /* clear the sticky nav */
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cream-dark) transparent;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1.5px dashed rgba(26,16,48,0.18);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.activeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--hotpink);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 900;
+  border-radius: 50%;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.matchCount {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resetBtn {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: transparent;
+  color: var(--hotpink-dark);
+  border: 1.5px solid rgba(196,0,90,0.40);
+  border-radius: 4px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.resetBtn:hover {
+  background: var(--hotpink-light);
+  color: var(--hotpink-dark);
+}
+
+/* ── Groups ──────────────────────────────────────────────── */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.groupLabel {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.groupAnnotation {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+
+/* ── Chip row ────────────────────────────────────────────── */
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ── Chip — matches ActivityGrid filterChip style exactly ─── */
+.chip {
+  background: var(--white);
+  border: 1.5px solid rgba(26,16,48,0.28);
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.15);
+  transition:
+    transform var(--transition-bounce),
+    box-shadow var(--transition-base),
+    background-color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+
+  /* strip badge chrome when a Badge is nested inside */
+  & > span[class*="badge"] {
+    border: none;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    font-weight: 900;
+    /* keep category colour on text */
+    filter: brightness(0.85);
+  }
+}
+.chip:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.20);
+  background: var(--cream-dark);
+}
+.chipActive {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.35);
+
+  & > span[class*="badge"] {
+    filter: brightness(1.4);
+    color: #fff !important;
+  }
+}
+
+/* ── Panel empty state ───────────────────────────────────── */
+.panelEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+
+  p { margin: 0; }
+}
+
+.resetBtnLarge {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--hotpink);
+  color: #fff;
+  border: 1.5px solid rgba(26,16,48,0.35);
+  border-radius: 5px;
+  padding: 7px 16px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(26,16,48,0.30);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+}
+.resetBtnLarge:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(26,16,48,0.30);
+}

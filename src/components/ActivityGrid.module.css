@@ -345,3 +345,139 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   NEW — Browse layout with filter sidebar
+   (Appended — all existing rules above are untouched)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Two-column layout wrapper */
+.browseLayout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+
+  @media (min-width: 960px) {
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+  }
+}
+
+/* Filter sidebar — hidden on mobile until toggled */
+.filterSidebar {
+  display: none;
+
+  @media (min-width: 960px) {
+    /* always visible on desktop */
+    display: block;
+  }
+}
+
+.filterSidebarOpen {
+  /* toggled open on mobile */
+  display: block;
+}
+
+/* Results column */
+.resultsCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0; /* prevent grid blowout */
+}
+
+/* Mobile filter toggle button */
+.filterToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  background: var(--white);
+  border: 1.5px solid rgba(26,16,48,0.28);
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.15);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+
+  @media (min-width: 960px) {
+    /* on desktop the sidebar is always shown; hide the toggle */
+    display: none;
+  }
+}
+.filterToggleBtn:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 3px 0 rgba(26,16,48,0.20);
+}
+
+.filterToggleBadge {
+  font-size: 0.5rem;
+  color: var(--hotpink);
+  line-height: 1;
+}
+
+/* Active filter summary strip */
+.filterSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cobalt-light);
+  border: 1px solid rgba(27,75,255,0.25);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.filterSummaryText {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cobalt-dark);
+
+  strong { font-weight: 900; }
+}
+
+.clearFiltersBtn {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: transparent;
+  color: var(--hotpink-dark);
+  border: 1.5px solid rgba(196,0,90,0.35);
+  border-radius: 4px;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+.clearFiltersBtn:hover {
+  background: var(--hotpink-light);
+}
+
+/* Reroll row */
+.rerollRow {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+/* Empty state improvements */
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.emptySubtitle {
+  font-size: 0.9rem;
+  color: var(--ink-faint);
+  font-weight: 600;
+  max-width: 360px;
+  text-align: center;
+}

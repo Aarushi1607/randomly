@@ -1,41 +1,83 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import styles from './ActivityGrid.module.css';
 import { Button } from './Button';
 import { Card } from './Card';
-import { Badge } from './Badge';
-import { mockActivities, featuredActivities, getRandomActivity, CATEGORY_LABELS } from '../data/activities';
-import type { Activity, Category } from '../data/activities';
-
-const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as Category[];
-
-type FilterState = 'all' | Category;
+import { FilterPanel } from './FilterPanel';
+import {
+  mockActivities,
+  featuredActivities,
+  getRandomFromPool,
+} from '../data/activities';
+import type { Activity } from '../data/activities';
+import { applyFilters, isFiltersEmpty } from '../lib/filters';
+import { EMPTY_FILTERS } from '../lib/filters';
+import type { FilterState } from '../lib/filters';
 
 export function ActivityGrid() {
-  const [pickedActivity, setPickedActivity] = useState<Activity | null>(null);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [filter, setFilter] = useState<FilterState>('all');
-  const [triedId, setTriedId] = useState<string | null>(null);
+  // ── Surprise Me state ─────────────────────────────────────
+  const [pickedActivity, setPickedActivity]   = useState<Activity | null>(null);
+  const [isSpinning,     setIsSpinning]        = useState(false);
+  const [triedId,        setTriedId]           = useState<string | null>(null);
+
+  // ── Filter state ──────────────────────────────────────────
+  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
+
+  // ── Panel open/close (mobile) ─────────────────────────────
+  const [panelOpen, setPanelOpen] = useState(false);
+
+  // ── Derived filtered list ─────────────────────────────────
+  const filteredActivities = useMemo(
+    () => applyFilters(mockActivities, filters),
+    [filters],
+  );
+
+  // ── Handlers ─────────────────────────────────────────────
+
+  const handleFilterChange = useCallback((next: FilterState) => {
+    setFilters(next);
+    // If a picked activity no longer matches the new filters, clear it
+    setPickedActivity((prev) => {
+      if (!prev) return null;
+      return applyFilters([prev], next).length > 0 ? prev : null;
+    });
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setFilters(EMPTY_FILTERS);
+  }, []);
 
   const handleSurpriseMe = useCallback(() => {
     setIsSpinning(true);
     setPickedActivity(null);
     setTriedId(null);
 
-    // Simulate a brief "spinning" delay for delight
     setTimeout(() => {
-      setPickedActivity(getRandomActivity());
+      // Respect active filters; fall back to full list if nothing matches
+      setPickedActivity(getRandomFromPool(filteredActivities));
       setIsSpinning(false);
     }, 700);
-  }, []);
+  }, [filteredActivities]);
 
   const handleTryThis = useCallback((id: string) => {
     setTriedId(id);
   }, []);
 
-  const filteredActivities =
-    filter === 'all'
-      ? mockActivities
-      : mockActivities.filter((a) => a.category === filter);
+  // ── Reroll: pick another random from the filtered pool ────
+  const handleReroll = useCallback(() => {
+    setIsSpinning(true);
+    setTriedId(null);
+
+    setTimeout(() => {
+      // exclude the current pick so we always get a different one
+      const pool = filteredActivities.filter(
+        (a) => a.id !== pickedActivity?.id,
+      );
+      setPickedActivity(getRandomFromPool(pool.length > 0 ? pool : filteredActivities));
+      setIsSpinning(false);
+    }, 500);
+  }, [filteredActivities, pickedActivity]);
+
+  const filtersActive = !isFiltersEmpty(filters);
 
   return (
     <section
@@ -43,7 +85,7 @@ export function ActivityGrid() {
       id="discover"
       aria-labelledby="discover-heading"
     >
-      {/* Section header */}
+      {/* ── Section header ─────────────────────────────── */}
       <div className={styles.sectionHeader}>
         <div className={styles.sectionEyebrow} aria-hidden="true">
           🗺️ what should i do today?
@@ -52,20 +94,21 @@ export function ActivityGrid() {
           Discover Something New
         </h2>
         <p className={styles.sectionSubtitle}>
-          Not feeling inspired? Hit the button and let us choose for you.
+          Filter by mood, budget, time, or just hit the button.
         </p>
       </div>
 
-      {/* ── Surprise Me zone ─────────────────────────────────── */}
+      {/* ── Surprise Me zone ──────────────────────────── */}
       <div className={styles.surpriseZone} role="region" aria-label="Random activity picker">
         <div className={styles.surpriseBox}>
-          {/* Decorative doodles */}
-          <span className={styles.doodleStar} aria-hidden="true">⭐</span>
-          <span className={styles.doodleSparkle} aria-hidden="true">✨</span>
+          <span className={styles.doodleStar}  aria-hidden="true">⭐</span>
+          <span className={styles.doodleSparkle}  aria-hidden="true">✨</span>
           <span className={styles.doodleSparkle2} aria-hidden="true">🌟</span>
 
           <p className={styles.surpriseTagline}>
-            Feeling lucky? Let the universe decide.
+            {filtersActive
+              ? `Picking from ${filteredActivities.length} matching activit${filteredActivities.length === 1 ? 'y' : 'ies'}…`
+              : 'Feeling lucky? Let the universe decide.'}
           </p>
 
           <Button
@@ -73,8 +116,13 @@ export function ActivityGrid() {
             size="lg"
             onClick={handleSurpriseMe}
             loading={isSpinning}
+            disabled={filteredActivities.length === 0}
             aria-live="polite"
-            aria-label="Pick a random activity for me"
+            aria-label={
+              filteredActivities.length === 0
+                ? 'No activities match the current filters'
+                : 'Pick a random activity for me'
+            }
           >
             {isSpinning ? 'Picking...' : '🎲 Surprise Me!'}
           </Button>
@@ -90,11 +138,25 @@ export function ActivityGrid() {
               <div className={styles.pickedLabel} aria-hidden="true">
                 🎉 your activity awaits!
               </div>
+
               <Card
                 activity={pickedActivity}
                 highlighted
                 onTryThis={handleTryThis}
               />
+
+              {/* Reroll button */}
+              <div className={styles.rerollRow}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReroll}
+                  aria-label="Pick a different random activity"
+                >
+                  🔀 Pick another
+                </Button>
+              </div>
+
               {triedId === pickedActivity.id && (
                 <p className={styles.triedMessage} role="status">
                   ✅ Awesome! Go enjoy your adventure. You can always pick again!
@@ -103,7 +165,6 @@ export function ActivityGrid() {
             </div>
           )}
 
-          {/* Empty prompt (initial state) */}
           {!isSpinning && !pickedActivity && (
             <p className={styles.emptyHint} aria-hidden="true">
               👆 press the button, i dare you
@@ -112,72 +173,127 @@ export function ActivityGrid() {
         </div>
       </div>
 
-      {/* ── Browse all activities ─────────────────────────────── */}
+      {/* ── Browse section: filters + grid ──────────────── */}
       <div className={styles.browseSection}>
+
+        {/* Browse heading row */}
         <div className={styles.browseHeader}>
           <h3 className={styles.browseTitle}>Or browse them all</h3>
-          {/* Category filter chips */}
-          <div className={styles.filters} role="group" aria-label="Filter by category">
-            <button
-              className={[styles.filterChip, filter === 'all' ? styles.filterActive : ''].join(' ')}
-              onClick={() => setFilter('all')}
-              aria-pressed={filter === 'all'}
-            >
-              🌈 All
-            </button>
-            {ALL_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={[styles.filterChip, filter === cat ? styles.filterActive : ''].join(' ')}
-                onClick={() => setFilter(cat === filter ? 'all' : cat)}
-                aria-pressed={filter === cat}
-              >
-                <Badge category={cat} size="sm" />
-              </button>
-            ))}
-          </div>
+
+          {/* Mobile filter toggle */}
+          <button
+            type="button"
+            className={styles.filterToggleBtn}
+            onClick={() => setPanelOpen((o) => !o)}
+            aria-expanded={panelOpen}
+            aria-controls="filter-panel"
+          >
+            {panelOpen ? '✕ Hide filters' : '🎛️ Filters'}
+            {filtersActive && (
+              <span className={styles.filterToggleBadge} aria-hidden="true">
+                ●
+              </span>
+            )}
+          </button>
         </div>
 
-        {/* Grid */}
-        {filteredActivities.length > 0 ? (
+        {/* Two-column layout: filter sidebar + results */}
+        <div className={[styles.browseLayout, panelOpen ? styles.panelVisible : ''].join(' ')}>
+
+          {/* Filter panel — sticky sidebar on desktop, toggled on mobile */}
           <div
-            className={styles.grid}
-            role="list"
-            aria-label={`Activities${filter !== 'all' ? ` in ${CATEGORY_LABELS[filter as Category]}` : ''}`}
+            id="filter-panel"
+            className={[styles.filterSidebar, panelOpen ? styles.filterSidebarOpen : ''].join(' ')}
+            aria-hidden={!panelOpen && typeof window !== 'undefined' && window.innerWidth < 960}
           >
-            {filteredActivities.map((activity) => (
-              <div key={activity.id} role="listitem">
-                <Card
-                  activity={activity}
-                  highlighted={activity.isFeatured}
-                  onTryThis={handleTryThis}
-                />
-                {triedId === activity.id && (
-                  <p className={styles.triedMessageInline} role="status" aria-live="polite">
-                    ✅ Go enjoy it!
-                  </p>
-                )}
+            <FilterPanel
+              filters={filters}
+              onChange={handleFilterChange}
+              onReset={handleReset}
+              totalCount={mockActivities.length}
+              matchCount={filteredActivities.length}
+            />
+          </div>
+
+          {/* Results column */}
+          <div className={styles.resultsCol}>
+
+            {/* Active filter summary strip */}
+            {filtersActive && (
+              <div className={styles.filterSummary} role="status" aria-live="polite">
+                <span className={styles.filterSummaryText}>
+                  Showing <strong>{filteredActivities.length}</strong> of{' '}
+                  {mockActivities.length} activities
+                </span>
+                <button
+                  type="button"
+                  className={styles.clearFiltersBtn}
+                  onClick={handleReset}
+                  aria-label="Clear all filters"
+                >
+                  ✕ Clear all
+                </button>
               </div>
-            ))}
+            )}
+
+            {/* Grid or empty state */}
+            {filteredActivities.length > 0 ? (
+              <div
+                className={styles.grid}
+                role="list"
+                aria-label={
+                  filtersActive
+                    ? `${filteredActivities.length} matching activities`
+                    : 'All activities'
+                }
+              >
+                {filteredActivities.map((activity) => (
+                  <div key={activity.id} role="listitem">
+                    <Card
+                      activity={activity}
+                      highlighted={activity.isFeatured}
+                      onTryThis={handleTryThis}
+                    />
+                    {triedId === activity.id && (
+                      <p
+                        className={styles.triedMessageInline}
+                        role="status"
+                        aria-live="polite"
+                      >
+                        ✅ Go enjoy it!
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Empty state */
+              <div className={styles.emptyState} role="status" aria-live="polite">
+                <span className={styles.emptyEmoji} aria-hidden="true">🫥</span>
+                <p className={styles.emptyTitle}>No activities match your filters.</p>
+                <p className={styles.emptySubtitle}>
+                  Try relaxing a few filters, or clear them all to see everything.
+                </p>
+                <Button variant="primary" size="md" onClick={handleReset}>
+                  Reset filters
+                </Button>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className={styles.emptyState} role="status">
-            <span className={styles.emptyEmoji} aria-hidden="true">🫥</span>
-            <p>No activities in this category yet.</p>
-            <Button variant="ghost" size="sm" onClick={() => setFilter('all')}>
-              Show all activities
-            </Button>
-          </div>
-        )}
+        </div>
       </div>
 
-      {/* Featured section preview */}
+      {/* ── Featured picks ─────────────────────────────── */}
       <div className={styles.featuredSection}>
         <div className={styles.featuredLabel} aria-hidden="true">
           ⭐ staff picks ⭐
         </div>
         <h3 className={styles.featuredTitle}>Today's Featured Picks</h3>
-        <div className={styles.featuredGrid} role="list" aria-label="Featured activities">
+        <div
+          className={styles.featuredGrid}
+          role="list"
+          aria-label="Featured activities"
+        >
           {featuredActivities.map((activity) => (
             <div key={activity.id} role="listitem">
               <Card activity={activity} highlighted onTryThis={handleTryThis} />
