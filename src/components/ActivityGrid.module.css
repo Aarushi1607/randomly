@@ -1,5 +1,5 @@
 .section {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: var(--space-16) var(--space-6) var(--space-20);
   display: flex;
@@ -12,7 +12,7 @@
   }
 }
 
-/* ── Section header ──────────────────────────────────────────── */
+/* ── Section header ───────────────────────────────────── */
 .sectionHeader {
   text-align: center;
   display: flex;
@@ -22,26 +22,34 @@
 }
 
 .sectionEyebrow {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--ink-faint);
-  letter-spacing: 0.12em;
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: var(--white);
+  background: var(--cobalt);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  padding: 5px 16px;
+  /* 1px sketch border */
+  border: 1px solid rgba(26,16,48,0.25);
+  border-radius: 3px;
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.22);
+  transform: rotate(-0.8deg);
 }
 
 .sectionTitle {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
   color: var(--ink);
 }
 
 .sectionSubtitle {
   font-size: 1rem;
   color: var(--ink-soft);
-  max-width: 500px;
-  text-align: center;
+  max-width: 480px;
+  font-weight: 600;
 }
 
-/* ── Surprise Me zone ────────────────────────────────────────── */
+/* ── Surprise Me zone ─────────────────────────────────── */
 .surpriseZone {
   display: flex;
   justify-content: center;
@@ -49,103 +57,105 @@
 
 .surpriseBox {
   position: relative;
-  background: var(--white);
-  border: 2.5px dashed var(--coral);
-  border-radius: var(--radius-xl);
+  background: var(--electric);
+  /* thin dashed sketch border instead of heavy solid ink */
+  border: 1.5px dashed rgba(26,16,48,0.45);
+  border-radius: var(--radius-lg);
   padding: var(--space-12) var(--space-10);
   text-align: center;
-  max-width: 680px;
+  max-width: 700px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-5);
-  box-shadow: var(--shadow-md);
-
-  /* Background confetti pattern */
-  background-image:
-    radial-gradient(circle, rgba(255, 107, 107, 0.05) 1px, transparent 1px),
-    radial-gradient(circle, rgba(255, 209, 102, 0.07) 1px, transparent 1px);
-  background-size: 24px 24px, 36px 36px;
-  background-position: 0 0, 12px 12px;
+  /* warm offset shadow */
+  box-shadow: 5px 6px 0 rgba(26,16,48,0.30);
 
   @media (max-width: 600px) {
     padding: var(--space-8) var(--space-5);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
   }
 }
 
-/* Doodle decoration in the surprise box */
-.doodleStar {
+/* Hand-drawn corner decorations via pseudo */
+.surpriseBox::before {
+  content: '★';
   position: absolute;
   top: -16px;
-  left: 20px;
-  font-size: 2rem;
-  animation: spin-slow 8s linear infinite;
-  pointer-events: none;
+  left: 16px;
+  font-size: 1.8rem;
+  line-height: 1;
+  animation: spin-slow 6s linear infinite;
+  filter: drop-shadow(1px 1px 0 var(--ink));
 }
-.doodleSparkle {
+.surpriseBox::after {
+  content: '★';
   position: absolute;
-  top: -10px;
-  right: 24px;
-  font-size: 1.4rem;
-  animation: float 2s ease-in-out infinite;
-  pointer-events: none;
+  top: -16px;
+  right: 16px;
+  font-size: 1.8rem;
+  line-height: 1;
+  animation: spin-slow 8s linear infinite reverse;
+  filter: drop-shadow(1px 1px 0 var(--ink));
 }
+
+.doodleStar,
+.doodleSparkle,
 .doodleSparkle2 {
-  position: absolute;
-  bottom: -12px;
-  right: 40px;
-  font-size: 1.2rem;
-  animation: float 2.5s ease-in-out infinite 0.5s;
-  pointer-events: none;
+  /* kept for markup compatibility — hidden; stars are via ::before/after */
+  display: none;
 }
 
 .surpriseTagline {
-  font-size: 1.05rem;
-  color: var(--ink-soft);
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  font-family: var(--font-display);
   margin: 0;
 }
 
 .emptyHint {
-  font-size: 0.82rem;
-  color: var(--ink-faint);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--ink-soft);
   font-style: italic;
-  font-weight: 600;
   margin: 0;
 }
 
-/* ── Picked reveal ───────────────────────────────────────────── */
+/* ── Picked reveal ────────────────────────────────────── */
 .pickedReveal {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  animation: pop-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: pop-in 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .pickedLabel {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--coral);
-  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .triedMessage {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--mint-dark);
-  background: var(--mint-light);
-  border: 1.5px solid var(--mint);
-  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--lime);
+  /* no heavy border */
+  border: 1px solid rgba(39,168,0,0.45);
+  border-radius: var(--radius-sm);
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.22);
   padding: var(--space-3) var(--space-4);
   text-align: center;
+  animation: pop-in 200ms ease both;
 }
 
-/* ── Browse section ──────────────────────────────────────────── */
+/* ── Browse section ────────────────────────────────────── */
 .browseSection {
   display: flex;
   flex-direction: column;
@@ -161,12 +171,28 @@
 }
 
 .browseTitle {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: var(--ink);
   white-space: nowrap;
+  position: relative;
+  display: inline-block;
+
+  /* hand-drawn underline via box decoration */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--electric);
+    border-radius: 2px;
+    border: 1px solid rgba(26,16,48,0.22);
+    transform: rotate(-0.5deg);
+  }
 }
 
-/* ── Filter chips ────────────────────────────────────────────── */
+/* ── Filter chips ─────────────────────────────────────── */
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -176,73 +202,76 @@
 
 .filterChip {
   background: var(--white);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-full);
-  padding: 4px 12px;
+  /* light sketch border */
+  border: 1.5px solid rgba(26,16,48,0.30);
+  border-radius: 5px;
+  padding: 5px 12px;
   font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
   cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.18);
   transition:
-    background-color var(--transition-fast),
-    border-color var(--transition-fast),
-    color var(--transition-fast),
-    transform var(--transition-bounce);
+    transform var(--transition-bounce),
+    box-shadow var(--transition-base),
+    background-color var(--transition-fast);
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 5px;
 
-  /* Strip badge internal padding so it looks inline */
   & > span {
     border: none;
     background: none;
     padding: 0;
-    font-weight: 700;
+    box-shadow: none;
+    font-weight: 900;
+    color: var(--ink);
   }
 }
-
 .filterChip:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.22);
   background: var(--cream-dark);
-  border-color: var(--ink-faint);
-  color: var(--ink);
-  transform: translateY(-1px);
 }
-
 .filterActive {
   background: var(--ink);
-  border-color: var(--ink);
   color: #fff;
-  transform: translateY(-1px);
+  border-color: var(--ink);
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.35);
 
-  & > span {
-    color: #fff;
-  }
+  & > span { color: #fff; }
 }
 
-/* ── Activity grid ───────────────────────────────────────────── */
+/* ── Activity grid ────────────────────────────────────── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-8) var(--space-6);
-  padding-top: var(--space-5); /* room for emoji stickers overflowing card top */
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: var(--space-10) var(--space-6);
+  /* room for top stickers + featured ribbons */
+  padding-top: var(--space-6);
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--space-10);
   }
 }
 
 .triedMessageInline {
   font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--mint-dark);
+  font-weight: 800;
+  color: var(--lime-dark);
   text-align: center;
-  margin-top: 4px;
+  margin-top: 6px;
   animation: pop-in 200ms ease both;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* ── Empty state ─────────────────────────────────────────────── */
+/* ── Empty state ──────────────────────────────────────── */
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -252,73 +281,65 @@
   text-align: center;
   color: var(--ink-faint);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .emptyEmoji {
-  font-size: 3rem;
+  font-size: 3.5rem;
   animation: float 2s ease-in-out infinite;
   display: block;
 }
 
-/* ── Featured section ────────────────────────────────────────── */
+/* ── Featured section ─────────────────────────────────── */
 .featuredSection {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  padding: var(--space-8);
-  background: linear-gradient(135deg, var(--butter-light) 0%, var(--peach-light) 100%);
-  border: 2px solid var(--butter-dark);
-  border-radius: var(--radius-xl);
+  background: var(--cobalt);
+  /* no heavy black outline on large panels */
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-8);
   position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(255, 255, 255, 0.3) 10px,
-      rgba(255, 255, 255, 0.3) 11px
-    );
-    pointer-events: none;
-  }
+  /* warm offset shadow only */
+  box-shadow: 5px 6px 0 rgba(26,16,48,0.30);
+  overflow: visible;
 
   @media (max-width: 600px) {
-    padding: var(--space-5);
-    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-4);
+    border-radius: var(--radius-md);
   }
 }
 
 .featuredLabel {
+  display: inline-block;
   font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--butter-dark);
-  letter-spacing: 0.12em;
+  font-weight: 900;
+  color: var(--ink);
+  background: var(--electric);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  padding: 5px 14px;
+  /* 1px sketch stroke */
+  border: 1px solid rgba(26,16,48,0.25);
+  border-radius: 3px;
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.22);
+  transform: rotate(-1deg);
+  display: block;
   text-align: center;
-  position: relative;
-  z-index: 1;
+  width: fit-content;
+  margin: 0 auto var(--space-3);
 }
 
 .featuredTitle {
-  font-size: 1.5rem;
-  color: var(--ink);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: #fff;
   text-align: center;
-  position: relative;
-  z-index: 1;
+  margin-bottom: var(--space-2);
 }
 
 .featuredGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--space-8) var(--space-5);
-  padding-top: var(--space-5);
-  position: relative;
-  z-index: 1;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: var(--space-10) var(--space-5);
+  padding-top: var(--space-8);
 
   @media (max-width: 640px) {
     grid-template-columns: 1fr;

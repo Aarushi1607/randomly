@@ -1,69 +1,85 @@
 /* =============================================================
-   RANDOMLY — Design System Tokens & Base Styles
-   Scrapbook / playful journal aesthetic
+   RANDOMLY — Design System v2
+   Chaotic-fun scrapbook · zine · sticker-journal · indie mag
    ============================================================= */
 
 /* ── Fonts ─────────────────────────────────────────────────── */
-/* Fredoka One  → display headings                              */
-/* Nunito       → body, UI labels                               */
+/* Fredoka One  → display headings (loaded via index.html)      */
+/* Nunito       → body / UI                                     */
 
 :root {
-  /* ── Palette ──────────────────────────────────────────────── */
-  --cream:       #fdf8f0;      /* warm paper background         */
-  --cream-dark:  #f5ede0;      /* slightly deeper paper         */
-  --ink:         #2d2440;      /* near-black for headings       */
-  --ink-soft:    #5a5170;      /* secondary text                */
-  --ink-faint:   #9c94ab;      /* placeholder / disabled        */
+  /* ── BOLD PALETTE ─────────────────────────────────────────── */
+  --cream:       #fdf6e3;      /* warm paper base                */
+  --cream-dark:  #f0e4c8;      /* ruled-paper tan                */
+  --ink:         #0f0a1e;      /* near-black                     */
+  --ink-soft:    #3a2f52;      /* secondary text — still dark    */
+  --ink-faint:   #7a6f92;      /* placeholder                    */
 
-  --coral:       #ff6b6b;      /* ★ primary accent              */
-  --coral-light: #ffd5d5;
-  --coral-dark:  #e05555;
+  /* saturated primaries */
+  --hotpink:        #ff2d78;
+  --hotpink-light:  #ffe0ec;
+  --hotpink-dark:   #c4005a;
 
-  --butter:      #ffd166;      /* yellow accent                 */
-  --butter-light:#fff3cc;
-  --butter-dark: #e6b84d;
+  --electric:       #ffe600;   /* electric yellow                */
+  --electric-light: #fffacc;
+  --electric-dark:  #c9b500;
 
-  --lavender:    #c084fc;      /* purple accent                 */
-  --lavender-light: #ede9fe;
-  --lavender-dark:  #9b5de5;
+  --cobalt:         #1b4bff;
+  --cobalt-light:   #dce4ff;
+  --cobalt-dark:    #0030cc;
 
-  --mint:        #06d6a0;      /* green accent                  */
-  --mint-light:  #ccf5ec;
-  --mint-dark:   #05b884;
+  --lime:           #39e600;
+  --lime-light:     #d6ffc2;
+  --lime-dark:      #27a800;
 
-  --sky:         #4cc9f0;      /* blue accent                   */
-  --sky-light:   #cef0fd;
-  --sky-dark:    #2da8d8;
+  --vivid:          #8b00ff;   /* vivid purple                   */
+  --vivid-light:    #ead6ff;
+  --vivid-dark:     #6200cc;
 
-  --peach:       #ff9a76;      /* orange-peach accent           */
-  --peach-light: #ffe4d5;
-  --peach-dark:  #e07d56;
+  --tangerine:      #ff6a00;
+  --tangerine-light:#ffe5cc;
+  --tangerine-dark: #cc4e00;
 
-  --white:       #ffffff;
-  --border:      #e8dfd0;      /* warm parchment border         */
-  --border-soft: #f0e8da;
+  /* keep soft aliases so Badge/Card colour map still works */
+  --coral:          var(--hotpink);
+  --coral-light:    var(--hotpink-light);
+  --coral-dark:     var(--hotpink-dark);
+  --butter:         var(--electric);
+  --butter-light:   var(--electric-light);
+  --butter-dark:    var(--electric-dark);
+  --lavender:       #b84dff;
+  --lavender-light: var(--vivid-light);
+  --lavender-dark:  var(--vivid-dark);
+  --mint:           var(--lime);
+  --mint-light:     var(--lime-light);
+  --mint-dark:      var(--lime-dark);
+  --sky:            var(--cobalt);
+  --sky-light:      var(--cobalt-light);
+  --sky-dark:       var(--cobalt-dark);
+  --peach:          var(--tangerine);
+  --peach-light:    var(--tangerine-light);
+  --peach-dark:     var(--tangerine-dark);
 
-  /* ── Category colour map (used by badges) ─────────────────── */
-  --cat-outdoor:  var(--mint);
-  --cat-creative: var(--lavender);
-  --cat-social:   var(--coral);
-  --cat-learning: var(--sky);
-  --cat-wellness: var(--peach);
-  --cat-food:     var(--butter);
-  --cat-gaming:   var(--lavender-dark);
+  --white:     #ffffff;
+  /* structural borders — slightly warm dark, not pure ink */
+  --border:      #1a1030;
+  --border-soft: #c8b8a8;
+  /* sketch-weight border for decorative / secondary elements */
+  --border-sketch: #2a1f40;  /* 1-1.5px, used on chips, badges, annotations */
 
-  /* ── Shadows ──────────────────────────────────────────────── */
-  --shadow-xs:   0 1px 3px rgba(45, 36, 64, 0.08);
-  --shadow-sm:   0 2px 8px rgba(45, 36, 64, 0.10), 0 1px 3px rgba(45, 36, 64, 0.06);
-  --shadow-md:   0 4px 16px rgba(45, 36, 64, 0.12), 0 2px 6px rgba(45, 36, 64, 0.07);
-  --shadow-lg:   0 8px 32px rgba(45, 36, 64, 0.14), 0 3px 10px rgba(45, 36, 64, 0.08);
-  --shadow-card: 3px 4px 0px rgba(45, 36, 64, 0.12);   /* scrapbook-style offset */
+  /* ── Shadows — offset but warm-tinted, not pure black ───── */
+  --shadow-xs:   2px 2px 0px rgba(26,16,48,0.55);
+  --shadow-sm:   3px 3px 0px rgba(26,16,48,0.55);
+  --shadow-md:   4px 5px 0px rgba(26,16,48,0.50);
+  --shadow-lg:   5px 6px 0px rgba(26,16,48,0.48);
+  --shadow-card: 4px 5px 0px rgba(26,16,48,0.45);
+  --shadow-btn:  3px 4px 0px rgba(26,16,48,0.55);
 
   /* ── Border radius ────────────────────────────────────────── */
-  --radius-sm:   8px;
-  --radius-md:   14px;
-  --radius-lg:   20px;
-  --radius-xl:   28px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   22px;
   --radius-full: 9999px;
 
   /* ── Typography ───────────────────────────────────────────── */
@@ -71,7 +87,7 @@
   --font-body:    'Nunito', 'Segoe UI', system-ui, sans-serif;
   --font-mono:    ui-monospace, Consolas, monospace;
 
-  /* ── Spacing scale ─────────────────────────────────────────── */
+  /* ── Spacing ──────────────────────────────────────────────── */
   --space-1:  4px;
   --space-2:  8px;
   --space-3:  12px;
@@ -87,19 +103,16 @@
   /* ── Transitions ──────────────────────────────────────────── */
   --transition-fast:   120ms ease;
   --transition-base:   200ms ease;
-  --transition-bounce: 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-bounce: 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── Reset & Base ───────────────────────────────────────────── */
+/* ── Reset ──────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
@@ -107,10 +120,11 @@ body {
   line-height: 1.6;
   color: var(--ink-soft);
   background-color: var(--cream);
+  /* graph-paper grid lines */
   background-image:
-    radial-gradient(circle at 20% 10%, rgba(255, 107, 107, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 80% 60%, rgba(192, 132, 252, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at 50% 90%, rgba(76, 201, 240, 0.05) 0%, transparent 50%);
+    linear-gradient(rgba(15,10,30,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,10,30,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -126,68 +140,61 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--ink);
-  line-height: 1.15;
-  letter-spacing: 0.01em;
+  line-height: 1.1;
 }
 
-h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
-h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
-h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); }
 h4 { font-size: 1rem; }
-
-p { margin: 0; }
+p  { margin: 0; }
 
 a {
-  color: var(--coral-dark);
+  color: var(--hotpink-dark);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
-a:hover { color: var(--coral); }
-
+a:hover { color: var(--hotpink); }
 img { max-width: 100%; display: block; }
+ul  { list-style: none; }
 
-ul { list-style: none; }
-
-/* ── Focus styles (accessible, on-brand) ───────────────────── */
+/* ── Focus ─────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 3px solid var(--coral);
+  outline: 3px solid var(--hotpink);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--cream-dark); }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: var(--radius-full);
+  background: var(--hotpink);
+  border-radius: 0;
+  border: 2px solid var(--ink);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+::-webkit-scrollbar-thumb:hover { background: var(--hotpink-dark); }
 
-/* ── Utility classes ─────────────────────────────────────────── */
+/* ── Utility ─────────────────────────────────────────────────── */
 .sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-/* ── Keyframe animations ─────────────────────────────────────── */
+/* ── Keyframes ─────────────────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
+  50%       { transform: translateY(-10px); }
 }
 
 @keyframes wiggle {
   0%, 100% { transform: rotate(0deg); }
-  25%       { transform: rotate(-4deg); }
-  75%       { transform: rotate(4deg); }
+  25%       { transform: rotate(-6deg); }
+  75%       { transform: rotate(6deg); }
 }
 
 @keyframes pop-in {
-  0%   { opacity: 0; transform: scale(0.85) translateY(12px); }
+  0%   { opacity: 0; transform: scale(0.75) translateY(16px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
@@ -197,7 +204,27 @@ ul { list-style: none; }
 }
 
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.5); }
-  70%  { box-shadow: 0 0 0 12px rgba(255, 107, 107, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+  0%   { box-shadow: var(--shadow-btn), 0 0 0 0 rgba(255,45,120,0.50); }
+  70%  { box-shadow: var(--shadow-btn), 0 0 0 14px rgba(255,45,120,0); }
+  100% { box-shadow: var(--shadow-btn), 0 0 0 0 rgba(255,45,120,0); }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes stamp-in {
+  0%   { opacity: 0; transform: scale(1.6) rotate(-8deg); }
+  60%  { opacity: 1; transform: scale(0.92) rotate(2deg); }
+  100% { transform: scale(1) rotate(var(--rot, 0deg)); }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

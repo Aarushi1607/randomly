@@ -2,28 +2,27 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(253, 248, 240, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 2px solid var(--border);
+  background: var(--electric);
+  /* 2px → 1.5px, warm dark not pure ink */
+  border-bottom: 1.5px solid rgba(26,16,48,0.60);
 }
 
 .nav {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 var(--space-6);
-  height: 68px;
+  height: 70px;
   display: flex;
   align-items: center;
   gap: var(--space-6);
 
   @media (max-width: 768px) {
     padding: 0 var(--space-4);
-    height: 60px;
+    height: 62px;
   }
 }
 
-/* ── Logo ────────────────────────────────────────────────────── */
+/* ── Logo ─────────────────────────────────────────────────── */
 .logo {
   display: flex;
   align-items: center;
@@ -33,32 +32,40 @@
 }
 
 .logoIcon {
-  font-size: 1.8rem;
+  font-size: 2rem;
   line-height: 1;
   transition: transform var(--transition-bounce);
   display: inline-block;
+  /* softer drop shadow */
+  filter: drop-shadow(1px 2px 0 rgba(26,16,48,0.30));
 }
 .logo:hover .logoIcon {
-  transform: rotate(20deg) scale(1.15);
+  transform: rotate(25deg) scale(1.2);
 }
 
 .logoText {
   font-family: var(--font-display);
-  font-size: 1.6rem;
-  letter-spacing: -0.01em;
+  font-size: 1.85rem;
   line-height: 1;
+  letter-spacing: 0.01em;
 }
 .logoBold   { color: var(--ink); }
-.logoAccent { color: var(--coral); }
+.logoAccent { color: var(--hotpink); }
 
 .logoTagline {
   font-size: 0.58rem;
-  font-weight: 800;
-  color: var(--ink-faint);
-  letter-spacing: 0.1em;
+  font-weight: 900;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   align-self: flex-end;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  background: var(--hotpink);
+  color: #fff;
+  padding: 2px 6px;
+  /* 1px barely-there sketch border — just enough to read as a sticker */
+  border: 1px solid rgba(26,16,48,0.35);
+  border-radius: 3px;
+  transform: rotate(-2deg);
   display: none;
 
   @media (min-width: 900px) {
@@ -66,11 +73,11 @@
   }
 }
 
-/* ── Desktop links ───────────────────────────────────────────── */
+/* ── Desktop links ──────────────────────────────────────────── */
 .links {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
   margin-left: auto;
   list-style: none;
 
@@ -83,35 +90,41 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--ink);
   text-decoration: none;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  border: 2px solid transparent;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
   transition:
     background-color var(--transition-fast),
-    color var(--transition-fast),
-    border-color var(--transition-fast);
+    border-color var(--transition-fast),
+    transform var(--transition-bounce);
 }
 .link:hover {
-  background: var(--cream-dark);
+  background: rgba(255,255,255,0.65);
+  border-color: rgba(26,16,48,0.30);
+  /* very light sketch shadow on hover */
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.18);
+  transform: translateY(-2px) rotate(-1deg);
   color: var(--ink);
-  border-color: var(--border);
 }
 
-/* ── CTA button ──────────────────────────────────────────────── */
+/* ── CTA ─────────────────────────────────────────────────────── */
 .ctaButton {
   font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 0.88rem;
-  padding: var(--space-2) var(--space-5);
-  background: var(--coral);
+  font-weight: 900;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 9px var(--space-5);
+  background: var(--hotpink);
   color: #fff;
-  border: 2px solid var(--coral-dark);
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 0 var(--coral-dark);
+  /* 1.5px sketch stroke */
+  border: 1.5px solid rgba(26,16,48,0.40);
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.40);
   text-decoration: none;
   transition: transform var(--transition-bounce), box-shadow var(--transition-base);
   white-space: nowrap;
@@ -123,22 +136,27 @@
 }
 .ctaButton:hover {
   color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 0 var(--coral-dark);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 6px 0 rgba(26,16,48,0.40);
+}
+.ctaButton:active {
+  transform: translate(2px, 3px);
+  box-shadow: 1px 1px 0 rgba(26,16,48,0.30);
 }
 
-/* ── Mobile hamburger ─────────────────────────────────────────── */
+/* ── Hamburger ─────────────────────────────────────────────── */
 .menuToggle {
   display: none;
   margin-left: auto;
-  background: var(--cream-dark);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-md);
-  width: 40px;
-  height: 40px;
-  font-size: 1.1rem;
+  background: rgba(255,255,255,0.7);
+  border: 1.5px solid rgba(26,16,48,0.35);
+  border-radius: var(--radius-sm);
+  width: 42px;
+  height: 42px;
+  font-size: 1.15rem;
   cursor: pointer;
-  transition: background-color var(--transition-fast);
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.22);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
 
   @media (max-width: 768px) {
     display: flex;
@@ -147,24 +165,25 @@
   }
 }
 .menuToggle:hover {
-  background: var(--border);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(26,16,48,0.28);
 }
 
-/* ── Mobile dropdown menu ─────────────────────────────────────── */
+/* ── Mobile menu ─────────────────────────────────────────────── */
 .mobileMenu {
   background: var(--cream);
-  border-top: 2px solid var(--border);
+  border-top: 1.5px solid rgba(26,16,48,0.25);
   padding: var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  animation: pop-in 200ms ease both;
+  animation: pop-in 180ms ease both;
 
   ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--space-2);
   }
 }
 
@@ -173,17 +192,20 @@
   align-items: center;
   gap: var(--space-2);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--ink);
   text-decoration: none;
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  border: 2px solid transparent;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  /* no heavy black box — lighter sketch border */
+  border: 1.5px solid rgba(26,16,48,0.28);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.8);
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.20);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
 }
 .mobileLink:hover {
-  background: var(--cream-dark);
-  border-color: var(--border);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 5px 0 rgba(26,16,48,0.22);
   color: var(--ink);
 }
 
@@ -191,19 +213,22 @@
   display: block;
   text-align: center;
   font-family: var(--font-body);
-  font-weight: 800;
+  font-weight: 900;
   font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   padding: var(--space-3) var(--space-5);
-  background: var(--coral);
+  background: var(--hotpink);
   color: #fff;
-  border: 2px solid var(--coral-dark);
-  border-radius: var(--radius-full);
-  box-shadow: 0 3px 0 var(--coral-dark);
+  border: 1.5px solid rgba(26,16,48,0.35);
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.40);
   text-decoration: none;
   margin-top: var(--space-2);
-  transition: transform var(--transition-bounce);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
 }
 .mobileCta:hover {
   color: #fff;
-  transform: translateY(-2px);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 6px 0 rgba(26,16,48,0.40);
 }

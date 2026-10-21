@@ -1,113 +1,125 @@
 .card {
   background: var(--white);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  box-shadow: var(--shadow-card);
+  /* no uniform black outline — shape defined by shadow + tint */
+  border: none;
+  border-radius: var(--radius-md);
+  /* slightly diagonal warm shadow: hand-placed, not mechanical */
+  box-shadow:
+    4px 5px 0 rgba(26,16,48,0.40),
+    0 1px 3px rgba(26,16,48,0.08);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
   position: relative;
+  overflow: visible;
   transition:
     transform var(--transition-bounce),
     box-shadow var(--transition-base);
-  overflow: visible;
-
-  /* Subtle paper texture via pseudo-element */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 23px,
-      rgba(200, 190, 210, 0.07) 23px,
-      rgba(200, 190, 210, 0.07) 24px
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  & > * { position: relative; z-index: 1; }
 }
 
 .card:hover {
-  transform: translateY(-4px) rotate(0.4deg);
-  box-shadow: 5px 8px 0px rgba(45, 36, 64, 0.14), var(--shadow-md);
+  transform: translate(-3px, -3px) rotate(-0.8deg);
+  box-shadow:
+    7px 8px 0 rgba(26,16,48,0.38),
+    0 2px 6px rgba(26,16,48,0.08);
 }
 
-/* Featured / highlighted card */
+/* ── Card tint backgrounds ──────────────────────────────── */
+.tintYellow { background: #fffbe6; }
+.tintPink   { background: #fff0f5; }
+.tintBlue   { background: #edf2ff; }
+.tintGreen  { background: #f0fff4; }
+.tintPurple { background: #f5f0ff; }
+.tintOrange { background: #fff5ee; }
+
+/* ── Highlighted / featured ─────────────────────────────── */
 .highlighted {
-  border-color: var(--coral);
-  background: linear-gradient(135deg, #fff 70%, var(--coral-light) 100%);
+  /* just a thin, slightly warm sketch border — not heavy ink */
+  box-shadow:
+    0 0 0 1.5px var(--hotpink),
+    4px 5px 0 rgba(196,0,90,0.35),
+    0 1px 3px rgba(26,16,48,0.07);
 
   &::after {
-    content: '⭐ Featured';
+    content: '★ FEATURED';
     position: absolute;
-    top: -12px;
-    right: 14px;
-    background: var(--coral);
+    top: -13px;
+    right: 12px;
+    background: var(--hotpink);
     color: #fff;
     font-family: var(--font-body);
-    font-weight: 800;
-    font-size: 0.68rem;
-    padding: 3px 10px;
-    border-radius: var(--radius-full);
-    border: 2px solid var(--white);
-    letter-spacing: 0.04em;
-    z-index: 2;
+    font-weight: 900;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    /* uneven pill — slightly hand-stamped */
+    border-radius: 3px 4px 3px 4px;
+    /* no hard ink border — let it float */
+    box-shadow: 2px 3px 0 rgba(196,0,90,0.35);
+    z-index: 3;
   }
 }
 
-/* ── Emoji sticker ─────────────────────────────────────────── */
-.emojiSticker {
-  position: absolute;
-  top: -18px;
-  left: 16px;
-  font-size: 2.4rem;
-  filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.15));
-  transition: transform var(--transition-bounce);
-  z-index: 2;
-  line-height: 1;
-}
-.card:hover .emojiSticker {
-  transform: rotate(-8deg) scale(1.2);
-}
-
-/* ── Header row ─────────────────────────────────────────────── */
-.header {
+/* ── Top strip ─────────────────────────────────────────── */
+.topStrip {
+  /* deep ink strip but slightly softer: 95% opacity */
+  background: rgba(15,10,30,0.92);
+  border-radius: calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0 0;
+  padding: 7px var(--space-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: var(--space-5); /* clear the emoji sticker */
-  flex-wrap: wrap;
   gap: var(--space-2);
+
+  & span[class*="badge"] {
+    border-color: rgba(255,255,255,0.25);
+  }
 }
 
 .duration {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink-faint);
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.65);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+/* ── Emoji sticker ─────────────────────────────────────── */
+.emojiSticker {
+  position: absolute;
+  top: 28px;
+  right: 14px;
+  font-size: 2.6rem;
+  line-height: 1;
+  filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.15));
+  transition: transform var(--transition-bounce);
+  z-index: 2;
+  pointer-events: none;
+}
+.card:hover .emojiSticker {
+  transform: rotate(-12deg) scale(1.25);
+}
+
+/* ── Body ──────────────────────────────────────────────── */
+.body {
+  padding: var(--space-4) var(--space-4) var(--space-3);
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  padding-right: 64px;
 }
 
-/* ── Title ───────────────────────────────────────────────────── */
 .title {
-  font-size: 1.1rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
   color: var(--ink);
-  margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
-/* ── Description ─────────────────────────────────────────────── */
 .description {
   font-size: 0.88rem;
   color: var(--ink-soft);
-  line-height: 1.55;
+  line-height: 1.6;
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -115,51 +127,57 @@
   overflow: hidden;
 }
 
-/* ── Tags ────────────────────────────────────────────────────── */
+/* ── Tags ──────────────────────────────────────────────── */
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
-  margin-top: var(--space-1);
+  gap: 5px;
 }
 
 .tag {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--ink-faint);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--ink-soft);
   background: var(--cream-dark);
-  padding: 2px 7px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--border-soft);
+  padding: 2px 8px;
+  /* 1px barely-there border — like a light pencil mark */
+  border: 1px solid rgba(200,184,168,0.7);
+  border-radius: 3px;
+  letter-spacing: 0.03em;
 }
 
-/* ── Footer ──────────────────────────────────────────────────── */
+/* ── Footer ──────────────────────────────────────────────── */
 .footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
-  padding-top: var(--space-3);
-  border-top: 1.5px dashed var(--border);
+  padding: var(--space-3) var(--space-4);
+  /* dashed separator — thinner, softer */
+  border-top: 1px dashed rgba(200,184,168,0.8);
   flex-wrap: wrap;
   gap: var(--space-2);
+  margin-top: auto;
 }
 
 .difficulty {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--ink-faint);
+  font-weight: 800;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  /* no hard border — just a painted circle */
   display: inline-block;
+  flex-shrink: 0;
 }
-.dotEasy   { background: var(--mint); }
-.dotMedium { background: var(--butter); }
-.dotHard   { background: var(--coral); }
+.dotEasy   { background: var(--lime); }
+.dotMedium { background: var(--electric); }
+.dotHard   { background: var(--hotpink); }

@@ -1,227 +1,279 @@
+/* ── Hero section ─────────────────────────────────────────── */
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: 520px;
-  display: flex;
+  background: var(--cream);
+}
+
+/* ── Ticker tape ─────────────────────────────────────────── */
+.ticker {
+  background: var(--hotpink);
+  /* thin warm underline instead of heavy ink */
+  border-bottom: 1.5px solid rgba(26,16,48,0.40);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+}
+
+.tickerInner {
+  display: inline-flex;
+  animation: marquee 22s linear infinite;
+}
+
+.tickerItem {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  color: #fff;
+  letter-spacing: 0.08em;
+  padding-right: var(--space-6);
+  flex-shrink: 0;
+}
+
+/* ── Main layout ─────────────────────────────────────────── */
+.layout {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-8) var(--space-12);
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-8);
   align-items: center;
-  justify-content: center;
-  padding: var(--space-16) var(--space-6) var(--space-12);
-  text-align: center;
+  position: relative;
 
-  /* Soft gradient backdrop */
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255, 107, 107, 0.12) 0%, transparent 70%),
-    var(--cream);
-
-  @media (max-width: 768px) {
-    min-height: 420px;
-    padding: var(--space-12) var(--space-4) var(--space-10);
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    padding: var(--space-12) var(--space-5) var(--space-10);
   }
 }
 
-/* ── Floating emoji doodles ──────────────────────────────────── */
-.floatingEmojis {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.floatingEmoji {
-  position: absolute;
-  animation: float var(--dur, 3.5s) ease-in-out infinite;
-  user-select: none;
-  filter: blur(0.3px);
-}
-
-/* ── Main content ─────────────────────────────────────────────── */
-.content {
-  position: relative;
-  z-index: 2;
-  max-width: 700px;
+/* ── Left column ─────────────────────────────────────────── */
+.leftCol {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--space-6);
+  align-items: flex-start;
 }
 
-/* ── Eyebrow label ─────────────────────────────────────────────── */
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+/* Eyebrow stamp — light sketch border */
+.eyebrowStamp {
+  display: inline-block;
+  background: var(--cobalt);
+  color: #fff;
   font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--ink-faint);
-  letter-spacing: 0.12em;
+  font-weight: 900;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+  padding: 5px 14px;
+  /* 1px sketch stroke, slightly transparent */
+  border: 1px solid rgba(26,16,48,0.30);
+  border-radius: 3px;
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.25);
+  transform: rotate(-1.5deg);
 }
 
-.eyebrowDoodle {
-  color: var(--coral);
-  font-size: 0.6rem;
-  animation: wiggle 2s ease-in-out infinite;
-}
-
-/* ── Heading ─────────────────────────────────────────────────── */
+/* ── Headline ─────────────────────────────────────────────── */
 .heading {
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  line-height: 1.1;
+  font-size: clamp(3.2rem, 8vw, 5.8rem);
+  line-height: 0.95;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0;
 }
 
-.headingAccent {
-  color: var(--coral);
-  position: relative;
-  display: inline-block;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: var(--butter);
-    border-radius: var(--radius-full);
-    opacity: 0.7;
-    transform: rotate(-1deg);
-  }
-}
-
-/* ── Subheading ──────────────────────────────────────────────── */
-.subheading {
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  color: var(--ink-soft);
-  line-height: 1.65;
-  max-width: 560px;
-
-  strong {
-    color: var(--ink);
-    font-weight: 800;
-  }
-}
-
-/* ── Stats ribbon ─────────────────────────────────────────────── */
-.statsRibbon {
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-  background: var(--white);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-full);
-  padding: var(--space-3) var(--space-8);
-  box-shadow: var(--shadow-sm);
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-}
-
-.statNum {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--coral);
-  line-height: 1;
-}
-
-.statLabel {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.statDivider {
-  font-size: 1.5rem;
-  color: var(--border);
-  line-height: 1;
-}
-
-/* ── Scroll hint ─────────────────────────────────────────────── */
-.scrollHint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin-top: var(--space-2);
-}
-
-.scrollArrow {
-  font-size: 1.4rem;
-  color: var(--coral);
-  animation: float 1.8s ease-in-out infinite;
+.headingLine2 {
   display: block;
 }
 
+.headingAccent {
+  display: inline-block;
+  color: var(--hotpink);
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.underlineSvg {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 24px;
+  overflow: visible;
+}
+
+/* ── Subheading ──────────────────────────────────────────── */
+.subheading {
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 520px;
+
+  strong {
+    color: var(--ink);
+    font-weight: 900;
+  }
+}
+
+/* ── Stats row ──────────────────────────────────────────── */
+.statsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.statChip {
+  font-family: var(--font-body);
+  font-weight: 900;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  /* no thick ink outline — let colour + light shadow do it */
+  border: 1px solid rgba(26,16,48,0.22);
+  border-radius: 4px;
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.22);
+  display: inline-block;
+}
+
+/* ── Scroll hint ─────────────────────────────────────────── */
+.scrollHint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.arrowSvg {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
 .scrollText {
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 800;
   color: var(--ink-faint);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-/* ── Scrapbook sticker cluster ───────────────────────────────── */
-.stickerCluster {
-  position: absolute;
-  right: 5%;
-  top: 15%;
+/* ── Right column — sticker cluster ─────────────────────── */
+.rightCol {
+  position: relative;
+  min-height: 360px;
   pointer-events: none;
-  z-index: 1;
 
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     display: none;
   }
 }
 
-.stickerStar {
+/* Big die sticker — lighter sketch border, imperfect border-radius */
+.bigSticker {
   position: absolute;
-  font-size: 2.5rem;
-  top: -20px;
-  right: 10px;
-  animation: spin-slow 12s linear infinite;
-  display: block;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--electric);
+  /* 1.5px sketch stroke, slightly transparent */
+  border: 1.5px solid rgba(26,16,48,0.35);
+  /* uneven corners → hand-cut sticker */
+  border-radius: 14px 18px 15px 17px / 16px 14px 18px 15px;
+  box-shadow: 3px 5px 0 rgba(26,16,48,0.30);
+  padding: var(--space-5) var(--space-6);
+  text-align: center;
+  width: 170px;
+  animation: float 4s ease-in-out infinite;
 }
 
-.stickerStar2 {
-  position: absolute;
-  font-size: 1.2rem;
-  top: 10px;
-  right: -15px;
-  animation: spin-slow 8s linear infinite reverse;
+.bigDie {
   display: block;
+  font-size: 4rem;
+  line-height: 1;
+  filter: drop-shadow(1px 2px 0 rgba(0,0,0,0.12));
 }
 
-.stickerNote {
+.bigStickerText {
   display: block;
-  background: var(--butter);
-  border: 2px solid var(--butter-dark);
-  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+/* Post-it A — no hard ink outline, shadow holds it instead */
+.postItA {
+  position: absolute;
+  top: 175px;
+  left: 0;
+  background: var(--hotpink);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.55;
   padding: var(--space-3) var(--space-4);
+  /* no border — shape comes from shadow + slight rotation */
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 5px 0 rgba(196,0,90,0.35), 0 1px 4px rgba(0,0,0,0.10);
+  transform: rotate(-4deg);
+  max-width: 140px;
+  animation: float 3.5s ease-in-out infinite 0.8s;
+
+  em   { font-style: italic; font-weight: 800; }
+  strong { font-weight: 900; font-size: 1rem; display: block; }
+}
+
+/* Post-it B — same, no border */
+.postItB {
+  position: absolute;
+  top: 135px;
+  right: 0;
+  background: var(--lime);
+  color: var(--ink);
   font-family: var(--font-body);
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--ink);
-  line-height: 1.5;
-  text-align: center;
+  line-height: 1.55;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  box-shadow: 3px 5px 0 rgba(39,168,0,0.35), 0 1px 4px rgba(0,0,0,0.08);
   transform: rotate(5deg);
-  box-shadow: var(--shadow-card);
   max-width: 130px;
+  animation: float 5s ease-in-out infinite 0.4s;
 
-  em {
-    color: var(--coral-dark);
-    font-style: normal;
-    font-weight: 800;
-    font-size: 0.95rem;
-  }
+  strong { font-weight: 900; }
+}
+
+/* Scribbled star */
+.scribbleStar {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  bottom: 60px;
+  left: 30px;
+  animation: spin-slow 10s linear infinite;
+}
+
+/* Lightning bolt */
+.bolt {
+  position: absolute;
+  width: 36px;
+  height: 64px;
+  bottom: 10px;
+  left: 10px;
+  animation: wiggle 4s ease-in-out infinite;
+}
+
+/* Wobbly circle annotation */
+.wobbleCircle {
+  position: absolute;
+  width: 106px;
+  height: 106px;
+  bottom: 6px;
+  right: 8px;
+  animation: spin-slow 18s linear infinite;
 }

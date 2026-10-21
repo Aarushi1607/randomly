@@ -3,31 +3,27 @@
   align-items: center;
   gap: 4px;
   font-family: var(--font-body);
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  border: 2px solid transparent;
-  letter-spacing: 0.02em;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  /* no hard ink border — colours stand on their own */
+  border: none;
+  border-radius: 4px;
   line-height: 1;
   white-space: nowrap;
+  /* just a hint of shadow for depth */
+  box-shadow: 1px 2px 0 rgba(26,16,48,0.18);
 }
 
-/* ── Sizes ───────────────────────────────────────────────────── */
-.sm {
-  font-size: 0.7rem;
-  padding: 3px 8px;
-}
-.md {
-  font-size: 0.78rem;
-  padding: 4px 10px;
-}
+/* ── Sizes ───────────────────────────────────────────────── */
+.sm { font-size: 0.65rem; padding: 3px 7px; }
+.md { font-size: 0.72rem; padding: 4px 10px; }
 
-/* ── Category colours ─────────────────────────────────────────
-   Each uses a light bg, vivid text, and a tinted border
-   ─────────────────────────────────────────────────────────── */
-.outdoor  { background: var(--mint-light);     color: var(--mint-dark);      border-color: var(--mint);     }
-.creative { background: var(--lavender-light); color: var(--lavender-dark);  border-color: var(--lavender); }
-.social   { background: var(--coral-light);    color: var(--coral-dark);     border-color: var(--coral);    }
-.learning { background: var(--sky-light);      color: var(--sky-dark);       border-color: var(--sky);      }
-.wellness { background: var(--peach-light);    color: var(--peach-dark);     border-color: var(--peach);    }
-.food     { background: var(--butter-light);   color: var(--butter-dark);    border-color: var(--butter);   }
-.gaming   { background: var(--lavender-light); color: var(--lavender-dark);  border-color: var(--lavender-dark); }
+/* ── Category — solid fills, colour does the work ────────── */
+.outdoor  { background: var(--lime);       color: var(--ink); }
+.creative { background: var(--vivid);      color: #fff; }
+.social   { background: var(--hotpink);    color: #fff; }
+.learning { background: var(--cobalt);     color: #fff; }
+.wellness { background: var(--tangerine);  color: #fff; }
+.food     { background: var(--electric);   color: var(--ink); }
+.gaming   { background: var(--vivid-dark); color: #fff; }
