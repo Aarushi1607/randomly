@@ -304,3 +304,128 @@ describe('filter persistence round-trip', () => {
     expect(loaded).toEqual(DEFAULT_FILTERS);
   });
 });
+
+// ── Audit additions ───────────────────────────────────────────
+// Extra coverage added during quality audit pass.
+
+import {
+  applyFilters,
+  isFiltersEmpty,
+  EMPTY_FILTERS,
+  activityMatchesFilters,
+} from './filters';
+import type { FilterState } from './filters';
+import { mockActivities, getRandomFromPool, getRandomFromPoolWith } from '../data/activities';
+import type { Activity } from '../data/activities';
+
+// ── hydrateFilters resilience (via storage round-trip) ────────
+
+describe('hydrateFilters — invalid stored values', () => {
+  it('does not crash when stored filter contains an unrecognised enum value', () => {
+    // Simulate a future stored value that is not in the current enum
+    const stale = {
+      _v: 1,
+      filters: {
+        category: 'NOT_A_REAL_CATEGORY',
+        mood:     null,
+        duration: null,
+        budget:   null,
+        location: null,
+        company:  null,
+      },
+    };
+    localStorage.setItem(STORAGE_KEYS.FILTERS, JSON.stringify(stale));
+    // Should not throw — returns the raw stored value (caller validates on use)
+    expect(() => readPersistedFilters()).not.toThrow();
+    const loaded = readPersistedFilters();
+    // The unknown value is preserved in storage but gets cast — this is fine;
+    // the filter predicate will simply not match any activity.
+    expect(loaded.filters.category).toBe('NOT_A_REAL_CATEGORY');
+  });
+
+  it('activityMatchesFilters returns false for unknown category value', () => {
+    const a: Activity = {
+      ...mockActivities[0],
+      category: 'outdoor',
+    };
+    const badFilter: FilterState = {
+      ...EMPTY_FILTERS,
+      // Cast forces an invalid value to test defensive behaviour
+      category: 'totally_unknown' as FilterState['category'],
+    };
+    // 'outdoor' !== 'totally_unknown' → should return false
+    expect(activityMatchesFilters(a, badFilter)).toBe(false);
+  });
+});
+
+// ── applyFilters returns the same reference for empty filters ──
+
+describe('applyFilters reference stability', () => {
+  it('returns the original array when filters are empty (no allocation)', () => {
+    const original = [mockActivities[0], mockActivities[1]];
+    const result = applyFilters(original, EMPTY_FILTERS);
+    expect(result).toBe(original);
+  });
+});
+
+// ── getRandomFromPool with real filtered data ─────────────────
+
+describe('getRandomFromPool — integration with real library', () => {
+  it('returns an activity that actually matches applied filters', () => {
+    const filters: FilterState = { ...EMPTY_FILTERS, budget: 'free', location: 'outdoors' };
+    const pool = applyFilters(mockActivities, filters);
+    expect(pool.length).toBeGreaterThan(0);
+
+    // Run 20 draws and confirm every result satisfies the filters
+    for (let i = 0; i < 20; i++) {
+      const picked = getRandomFromPoolWith(pool, Math.random);
+      expect(picked.budget).toBe('free');
+      expect(['outdoors', 'either']).toContain(picked.location);
+    }
+  });
+
+  it('fallback to full library when pool is empty does not crash', () => {
+    const result = getRandomFromPool([]);
+    expect(result).toBeDefined();
+    expect(result.id).toBeTruthy();
+  });
+
+  it('never returns undefined when the library has activities', () => {
+    expect(mockActivities.length).toBeGreaterThan(0);
+    const result = getRandomFromPool(mockActivities);
+    expect(result).toBeDefined();
+  });
+});
+
+// ── Storage: concurrent write does not corrupt data ──────────
+
+describe('storage — sequential writes are safe', () => {
+  it('last write wins without corruption', () => {
+    const first  = { ...DEFAULT_USER_DATA, favouriteIds: ['a1'] };
+    const second = { ...DEFAULT_USER_DATA, favouriteIds: ['a1', 'a2'] };
+    writeUserData(first);
+    writeUserData(second);
+    expect(readUserData().favouriteIds).toEqual(['a1', 'a2']);
+  });
+
+  it('writing empty completions array persists correctly', () => {
+    writeUserData({ ...DEFAULT_USER_DATA, completions: [] });
+    expect(readUserData().completions).toEqual([]);
+  });
+});
+
+// ── isFiltersEmpty edge cases ─────────────────────────────────
+
+describe('isFiltersEmpty edge cases', () => {
+  it('returns true when all dimensions are explicitly null', () => {
+    const f: FilterState = {
+      category: null, mood: null, duration: null,
+      budget: null,   location: null, company: null,
+    };
+    expect(isFiltersEmpty(f)).toBe(true);
+  });
+
+  it('returns false when only one dimension is set', () => {
+    expect(isFiltersEmpty({ ...EMPTY_FILTERS, company: 'family' })).toBe(false);
+  });
+});

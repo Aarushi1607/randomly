@@ -56,10 +56,8 @@ export function UserDataPanel({
     closeRef.current?.focus();
   }, []);
 
-  // Keep initialTab in sync if parent changes it
-  useEffect(() => {
-    setActiveTab(initialTab);
-  }, [initialTab]);
+  // Keep initialTab in sync — panel is unmounted/remounted by parent so
+  // initialTab only applies on mount; no effect needed.
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     const rect = dialogRef.current?.getBoundingClientRect();
@@ -211,8 +209,8 @@ export function UserDataPanel({
               </div>
 
               <ul className={styles.historyList} aria-label="Completed activities">
-                {completionActivities.map(({ record, activity }, i) => (
-                  <li key={i} className={styles.historyItem}>
+                {completionActivities.map(({ record, activity }) => (
+                  <li key={`${record.activityId}-${record.completedAt}`} className={styles.historyItem}>
                     <span className={styles.historyEmoji} aria-hidden="true">
                       {activity.emoji}
                     </span>
