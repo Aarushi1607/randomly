@@ -181,3 +181,39 @@
 .dotEasy   { background: var(--lime); }
 .dotMedium { background: var(--electric); }
 .dotHard   { background: var(--hotpink); }
+
+/* ── Hook line ──────────────────────────────────────────── */
+.hook {
+  font-size: 0.9rem;
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.45;
+  font-style: italic;
+}
+
+/* ── Meta row (budget / location / company chips) ────────── */
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.metaChip {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--ink-soft);
+  background: rgba(26,16,48,0.06);
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* ── Footer actions (ghost + primary side by side) ───────── */
+.footerActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}

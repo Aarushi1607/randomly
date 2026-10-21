@@ -3,6 +3,7 @@ import styles from './ActivityGrid.module.css';
 import { Button } from './Button';
 import { Card } from './Card';
 import { FilterPanel } from './FilterPanel';
+import { ActivityDetail } from './ActivityDetail';
 import {
   mockActivities,
   featuredActivities,
@@ -24,6 +25,9 @@ export function ActivityGrid() {
 
   // ── Panel open/close (mobile) ─────────────────────────────
   const [panelOpen, setPanelOpen] = useState(false);
+
+  // ── Detail modal ──────────────────────────────────────────
+  const [detailActivity, setDetailActivity] = useState<Activity | null>(null);
 
   // ── Derived filtered list ─────────────────────────────────
   const filteredActivities = useMemo(
@@ -62,6 +66,11 @@ export function ActivityGrid() {
     setTriedId(id);
   }, []);
 
+  const handleDetails = useCallback((id: string) => {
+    const found = mockActivities.find((a) => a.id === id) ?? null;
+    setDetailActivity(found);
+  }, []);
+
   // ── Reroll: pick another random from the filtered pool ────
   const handleReroll = useCallback(() => {
     setIsSpinning(true);
@@ -85,6 +94,14 @@ export function ActivityGrid() {
       id="discover"
       aria-labelledby="discover-heading"
     >
+      {/* Detail modal — rendered at section root so it's above everything */}
+      {detailActivity && (
+        <ActivityDetail
+          activity={detailActivity}
+          onClose={() => setDetailActivity(null)}
+          onTryThis={handleTryThis}
+        />
+      )}
       {/* ── Section header ─────────────────────────────── */}
       <div className={styles.sectionHeader}>
         <div className={styles.sectionEyebrow} aria-hidden="true">
@@ -143,6 +160,7 @@ export function ActivityGrid() {
                 activity={pickedActivity}
                 highlighted
                 onTryThis={handleTryThis}
+                onDetails={handleDetails}
               />
 
               {/* Reroll button */}
@@ -253,6 +271,7 @@ export function ActivityGrid() {
                       activity={activity}
                       highlighted={activity.isFeatured}
                       onTryThis={handleTryThis}
+                      onDetails={handleDetails}
                     />
                     {triedId === activity.id && (
                       <p
@@ -296,7 +315,7 @@ export function ActivityGrid() {
         >
           {featuredActivities.map((activity) => (
             <div key={activity.id} role="listitem">
-              <Card activity={activity} highlighted onTryThis={handleTryThis} />
+              <Card activity={activity} highlighted onTryThis={handleTryThis} onDetails={handleDetails} />
             </div>
           ))}
         </div>
