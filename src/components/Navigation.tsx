@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './Navigation.module.css';
+import type { UserDataPanelTab } from './UserDataPanel';
 
 interface NavLink {
   label: string;
@@ -8,12 +9,22 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { label: 'Discover',    href: '#discover',   emoji: '🔍' },
-  { label: 'Categories',  href: '#categories', emoji: '🗂️' },
-  { label: 'About',       href: '#about',      emoji: '💌' },
+  { label: 'Discover',   href: '#discover',   emoji: '🔍' },
+  { label: 'Categories', href: '#categories', emoji: '🗂️' },
+  { label: 'About',      href: '#about',      emoji: '💌' },
 ];
 
-export function Navigation() {
+interface NavigationProps {
+  favouriteCount?: number;
+  historyCount?: number;
+  onOpenPanel?: (tab: UserDataPanelTab) => void;
+}
+
+export function Navigation({
+  favouriteCount = 0,
+  historyCount   = 0,
+  onOpenPanel,
+}: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -41,6 +52,40 @@ export function Navigation() {
             </li>
           ))}
         </ul>
+
+        {/* Icon buttons: favourites + history */}
+        <div className={styles.iconGroup}>
+          {onOpenPanel && (
+            <>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={() => onOpenPanel('favourites')}
+                aria-label={`Favourites${favouriteCount > 0 ? ` (${favouriteCount})` : ''}`}
+              >
+                <span aria-hidden="true">❤️</span>
+                {favouriteCount > 0 && (
+                  <span className={styles.iconBadge} aria-hidden="true">
+                    {favouriteCount > 99 ? '99+' : favouriteCount}
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                className={styles.iconBtn}
+                onClick={() => onOpenPanel('history')}
+                aria-label={`Activity history${historyCount > 0 ? ` (${historyCount})` : ''}`}
+              >
+                <span aria-hidden="true">✅</span>
+                {historyCount > 0 && (
+                  <span className={styles.iconBadge} aria-hidden="true">
+                    {historyCount > 99 ? '99+' : historyCount}
+                  </span>
+                )}
+              </button>
+            </>
+          )}
+        </div>
 
         {/* CTA */}
         <a href="#discover" className={styles.ctaButton} aria-label="Start discovering activities">
@@ -80,6 +125,30 @@ export function Navigation() {
                 </a>
               </li>
             ))}
+            {onOpenPanel && (
+              <>
+                <li>
+                  <button
+                    type="button"
+                    className={styles.mobileLink}
+                    onClick={() => { onOpenPanel('favourites'); setMenuOpen(false); }}
+                  >
+                    <span aria-hidden="true">❤️</span>
+                    Favourites {favouriteCount > 0 && `(${favouriteCount})`}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className={styles.mobileLink}
+                    onClick={() => { onOpenPanel('history'); setMenuOpen(false); }}
+                  >
+                    <span aria-hidden="true">✅</span>
+                    History {historyCount > 0 && `(${historyCount})`}
+                  </button>
+                </li>
+              </>
+            )}
           </ul>
           <a
             href="#discover"

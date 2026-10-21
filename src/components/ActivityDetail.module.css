@@ -341,3 +341,80 @@
   text-underline-offset: 3px;
 }
 .dismissBtn:hover { color: var(--ink); }
+
+/* ── Header action group ──────────────────────────────────── */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── Favourite button (in header) ────────────────────────── */
+.heartBtn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.20);
+  border-radius: 50%;
+  color: rgba(255,255,255,0.80);
+  font-size: 1.1rem;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-bounce), background-color var(--transition-fast);
+}
+.heartBtn:hover {
+  transform: scale(1.15);
+  background: rgba(255,255,255,0.22);
+}
+.heartActive {
+  background: rgba(255,45,120,0.25);
+  border-color: rgba(255,45,120,0.50);
+}
+
+/* ── Completed "done again" CTA variant ─────────────────── */
+.completedBtn {
+  flex: 1;
+  font-family: var(--font-body);
+  font-weight: 900;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--lime);
+  color: var(--ink);
+  border: 1.5px solid rgba(26,16,48,0.30);
+  border-radius: var(--radius-sm);
+  padding: 12px var(--space-6);
+  cursor: pointer;
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.25);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+  min-height: 48px;
+}
+.completedBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 6px 0 rgba(26,16,48,0.25);
+}
+
+/* ── Secondary try button ────────────────────────────────── */
+.tryBtnSecondary {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--cream-dark);
+  color: var(--ink);
+  border: 1.5px solid rgba(26,16,48,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px var(--space-5);
+  cursor: pointer;
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.18);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+  min-height: 44px;
+}
+.tryBtnSecondary:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 5px 0 rgba(26,16,48,0.18);
+}

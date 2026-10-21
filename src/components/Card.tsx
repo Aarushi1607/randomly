@@ -22,7 +22,6 @@ const LOCATION_ICON: Record<Activity['location'], string> = {
   either:   '🌍',
 };
 
-/* Cycle through bold card tints */
 const CARD_TINTS = [
   styles.tintYellow,
   styles.tintPink,
@@ -41,6 +40,12 @@ export interface CardProps {
   highlighted?: boolean;
   onTryThis?: (id: string) => void;
   onDetails?: (id: string) => void;
+  /** Whether this activity is currently favourited */
+  isFavourite?: boolean;
+  /** Called when the heart button is clicked */
+  onToggleFavourite?: (id: string) => void;
+  /** Whether this activity has been completed at least once */
+  isCompleted?: boolean;
 }
 
 export function Card({
@@ -48,6 +53,9 @@ export function Card({
   highlighted = false,
   onTryThis,
   onDetails,
+  isFavourite = false,
+  onToggleFavourite,
+  isCompleted = false,
 }: CardProps) {
   const {
     id,
@@ -72,15 +80,21 @@ export function Card({
         styles.card,
         tintClass,
         highlighted ? styles.highlighted : '',
+        isCompleted ? styles.completed : '',
       ].filter(Boolean).join(' ')}
-      aria-label={`Activity: ${title}`}
+      aria-label={`Activity: ${title}${isCompleted ? ' (completed)' : ''}`}
     >
       {/* ── Coloured top strip ── */}
       <div className={styles.topStrip}>
         <Badge category={category} size="sm" />
-        <span className={styles.duration} aria-label={`Duration: ${duration}`}>
-          ⏱ {duration}
-        </span>
+        <div className={styles.topStripRight}>
+          {isCompleted && (
+            <span className={styles.completedBadge} aria-label="Completed">✅</span>
+          )}
+          <span className={styles.duration} aria-label={`Duration: ${duration}`}>
+            ⏱ {duration}
+          </span>
+        </div>
       </div>
 
       {/* ── Emoji sticker ── */}
@@ -88,37 +102,36 @@ export function Card({
         {emoji}
       </div>
 
+      {/* ── Favourite button ── */}
+      {onToggleFavourite && (
+        <button
+          type="button"
+          className={[styles.heartBtn, isFavourite ? styles.heartActive : ''].join(' ')}
+          onClick={() => onToggleFavourite(id)}
+          aria-label={isFavourite ? `Remove "${title}" from favourites` : `Add "${title}" to favourites`}
+          aria-pressed={isFavourite}
+        >
+          {isFavourite ? '❤️' : '🤍'}
+        </button>
+      )}
+
       {/* ── Body ── */}
       <div className={styles.body}>
         <h3 className={styles.title}>{title}</h3>
-
-        {/* Hook line — one-sentence preview */}
         <p className={styles.hook}>{hook}</p>
 
-        {/* Quick-info chips */}
         <div className={styles.metaRow} aria-label="Activity details">
-          <span
-            className={styles.metaChip}
-            aria-label={`Budget: ${costNote}`}
-            title={costNote}
-          >
+          <span className={styles.metaChip} aria-label={`Budget: ${costNote}`} title={costNote}>
             {BUDGET_ICON[budget]} {costNote}
           </span>
-          <span
-            className={styles.metaChip}
-            aria-label={`Location: ${location}`}
-          >
+          <span className={styles.metaChip} aria-label={`Location: ${location}`}>
             {LOCATION_ICON[location]} {location}
           </span>
-          <span
-            className={styles.metaChip}
-            aria-label={`Company: ${company.join(', ')}`}
-          >
+          <span className={styles.metaChip} aria-label={`Company: ${company.join(', ')}`}>
             👥 {company.join(' · ')}
           </span>
         </div>
 
-        {/* Tags */}
         <ul className={styles.tags} aria-label="Tags">
           {tags.slice(0, 3).map((tag) => (
             <li key={tag} className={styles.tag}>#{tag}</li>

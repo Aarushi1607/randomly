@@ -8,59 +8,55 @@ import {
 
 const DIFFICULTY_LABELS = { easy: 'Easy ●', medium: 'Medium ●●', hard: 'Hard ●●●' };
 
-interface ActivityDetailProps {
+export interface ActivityDetailProps {
   activity: Activity;
   onClose: () => void;
   onTryThis?: (id: string) => void;
+  /** Whether this activity is currently favourited */
+  isFavourite?: boolean;
+  /** Called when the heart button is pressed */
+  onToggleFavourite?: (id: string) => void;
+  /** Whether the activity has been completed (any number of times) */
+  isCompleted?: boolean;
+  /** Mark this activity as completed */
+  onComplete?: (id: string) => void;
 }
 
-export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailProps) {
+export function ActivityDetail({
+  activity,
+  onClose,
+  onTryThis,
+  isFavourite = false,
+  onToggleFavourite,
+  isCompleted = false,
+  onComplete,
+}: ActivityDetailProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef  = useRef<HTMLButtonElement>(null);
 
-  // Open the native dialog (accessibility: focus trap, Escape key)
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
     if (!dialog.open) dialog.showModal();
-    // Focus the close button on open
     closeRef.current?.focus();
   }, []);
 
-  // Close on backdrop click
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     const rect = dialogRef.current?.getBoundingClientRect();
     if (!rect) return;
     const outside =
-      e.clientX < rect.left ||
-      e.clientX > rect.right ||
-      e.clientY < rect.top  ||
-      e.clientY > rect.bottom;
+      e.clientX < rect.left || e.clientX > rect.right ||
+      e.clientY < rect.top  || e.clientY > rect.bottom;
     if (outside) onClose();
   }
 
   const {
-    id,
-    title,
-    hook,
-    description,
-    steps,
-    emoji,
-    category,
-    duration,
-    difficulty,
-    tags,
-    budget,
-    costNote,
-    location,
-    company,
-    materials,
-    tip,
-    safetyNote,
+    id, title, hook, description, steps, emoji, category,
+    duration, difficulty, tags, budget, costNote, location,
+    company, materials, tip, safetyNote,
   } = activity;
 
   return (
-    /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */
     <dialog
       ref={dialogRef}
       className={styles.dialog}
@@ -71,7 +67,7 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
     >
       <div className={styles.inner} onClick={(e) => e.stopPropagation()}>
 
-        {/* ── Header strip ──────────────────────────── */}
+        {/* ── Header ──────────────────────────── */}
         <div className={styles.header}>
           <div className={styles.headerLeft}>
             <span className={styles.bigEmoji} aria-hidden="true">{emoji}</span>
@@ -81,17 +77,31 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
               <p className={styles.hook}>{hook}</p>
             </div>
           </div>
-          <button
-            ref={closeRef}
-            className={styles.closeBtn}
-            onClick={onClose}
-            aria-label="Close activity details"
-          >
-            ✕
-          </button>
+          <div className={styles.headerActions}>
+            {/* Favourite toggle */}
+            {onToggleFavourite && (
+              <button
+                type="button"
+                className={[styles.heartBtn, isFavourite ? styles.heartActive : ''].join(' ')}
+                onClick={() => onToggleFavourite(id)}
+                aria-pressed={isFavourite}
+                aria-label={isFavourite ? 'Remove from favourites' : 'Add to favourites'}
+              >
+                {isFavourite ? '❤️' : '🤍'}
+              </button>
+            )}
+            <button
+              ref={closeRef}
+              className={styles.closeBtn}
+              onClick={onClose}
+              aria-label="Close activity details"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
-        {/* ── Quick stats row ────────────────────────── */}
+        {/* ── Stats ───────────────────────────── */}
         <div className={styles.statsRow} aria-label="Activity at a glance">
           <div className={styles.stat}>
             <span className={styles.statIcon} aria-hidden="true">⏱</span>
@@ -131,13 +141,13 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
           </div>
         </div>
 
-        {/* ── Description ────────────────────────────── */}
+        {/* ── Description ─────────────────────── */}
         <section className={styles.section} aria-labelledby="detail-description">
           <h3 id="detail-description" className={styles.sectionTitle}>About this activity</h3>
           <p className={styles.descriptionText}>{description}</p>
         </section>
 
-        {/* ── Steps ──────────────────────────────────── */}
+        {/* ── Steps ───────────────────────────── */}
         <section className={styles.section} aria-labelledby="detail-steps">
           <h3 id="detail-steps" className={styles.sectionTitle}>How to get started</h3>
           <ol className={styles.stepsList}>
@@ -150,15 +160,11 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
           </ol>
         </section>
 
-        {/* ── Materials ──────────────────────────────── */}
+        {/* ── Materials ───────────────────────── */}
         <section className={styles.section} aria-labelledby="detail-materials">
-          <h3 id="detail-materials" className={styles.sectionTitle}>
-            What you need
-          </h3>
+          <h3 id="detail-materials" className={styles.sectionTitle}>What you need</h3>
           {materials.length === 0 ? (
-            <p className={styles.materialsNone}>
-              ✅ Nothing required — you can start immediately.
-            </p>
+            <p className={styles.materialsNone}>✅ Nothing required — you can start immediately.</p>
           ) : (
             <ul className={styles.materialsList}>
               {materials.map((m) => (
@@ -168,13 +174,13 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
           )}
         </section>
 
-        {/* ── Tip ────────────────────────────────────── */}
+        {/* ── Tip ─────────────────────────────── */}
         <div className={styles.tipBox} role="note" aria-label="Pro tip">
           <span className={styles.tipIcon} aria-hidden="true">💡</span>
           <p className={styles.tipText}><strong>Pro tip:</strong> {tip}</p>
         </div>
 
-        {/* ── Safety note (conditional) ──────────────── */}
+        {/* ── Safety note ─────────────────────── */}
         {safetyNote && (
           <div className={styles.safetyBox} role="note" aria-label="Safety note">
             <span className={styles.safetyIcon} aria-hidden="true">⚠️</span>
@@ -182,24 +188,39 @@ export function ActivityDetail({ activity, onClose, onTryThis }: ActivityDetailP
           </div>
         )}
 
-        {/* ── Tags ───────────────────────────────────── */}
+        {/* ── Tags ────────────────────────────── */}
         <ul className={styles.tagsList} aria-label="Tags">
           {tags.map((t) => (
             <li key={t} className={styles.tag}>#{t}</li>
           ))}
         </ul>
 
-        {/* ── CTA ────────────────────────────────────── */}
+        {/* ── CTA row ─────────────────────────── */}
         <div className={styles.cta}>
+          {/* Primary: mark as done */}
+          {onComplete && (
+            <button
+              type="button"
+              className={isCompleted ? styles.completedBtn : styles.tryBtn}
+              onClick={() => { onComplete(id); }}
+              aria-label={isCompleted ? 'Mark as done again' : 'Mark as done'}
+            >
+              {isCompleted ? '✅ Done again!' : '🚀 I did this!'}
+            </button>
+          )}
+
+          {/* Secondary: "Let's go" / try this */}
           {onTryThis && (
             <button
               type="button"
-              className={styles.tryBtn}
+              className={styles.tryBtnSecondary}
               onClick={() => { onTryThis(id); onClose(); }}
+              aria-label={`Start "${title}"`}
             >
-              🚀 I'm doing this!
+              Let's go →
             </button>
           )}
+
           <button
             type="button"
             className={styles.dismissBtn}

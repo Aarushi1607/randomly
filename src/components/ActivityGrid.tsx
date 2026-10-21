@@ -11,23 +11,28 @@ import {
 } from '../data/activities';
 import type { Activity } from '../data/activities';
 import { applyFilters, isFiltersEmpty } from '../lib/filters';
-import { EMPTY_FILTERS } from '../lib/filters';
-import type { FilterState } from '../lib/filters';
+import type { UserDataActions } from '../lib/useUserData';
+import type { UserDataPanelTab } from './UserDataPanel';
 
-export function ActivityGrid() {
+interface ActivityGridProps {
+  userData: UserDataActions;
+  onOpenPanel: (tab: UserDataPanelTab) => void;
+}
+
+export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
   // ── Surprise Me state ─────────────────────────────────────
-  const [pickedActivity, setPickedActivity]   = useState<Activity | null>(null);
-  const [isSpinning,     setIsSpinning]        = useState(false);
-  const [triedId,        setTriedId]           = useState<string | null>(null);
+  const [pickedActivity, setPickedActivity] = useState<Activity | null>(null);
+  const [isSpinning,     setIsSpinning]     = useState(false);
+  const [triedId,        setTriedId]        = useState<string | null>(null);
 
-  // ── Filter state ──────────────────────────────────────────
-  const [filters, setFilters] = useState<FilterState>(EMPTY_FILTERS);
-
-  // ── Panel open/close (mobile) ─────────────────────────────
+  // ── Panel open/close (mobile filters) ─────────────────────
   const [panelOpen, setPanelOpen] = useState(false);
 
   // ── Detail modal ──────────────────────────────────────────
   const [detailActivity, setDetailActivity] = useState<Activity | null>(null);
+
+  // ── Filters come from persisted userData hook ─────────────
+  const { filters, setFilters, resetFilters } = userData;
 
   // ── Derived filtered list ─────────────────────────────────
   const filteredActivities = useMemo(
@@ -37,26 +42,23 @@ export function ActivityGrid() {
 
   // ── Handlers ─────────────────────────────────────────────
 
-  const handleFilterChange = useCallback((next: FilterState) => {
+  const handleFilterChange = useCallback((next: typeof filters) => {
     setFilters(next);
-    // If a picked activity no longer matches the new filters, clear it
     setPickedActivity((prev) => {
       if (!prev) return null;
       return applyFilters([prev], next).length > 0 ? prev : null;
     });
-  }, []);
+  }, [setFilters]);
 
   const handleReset = useCallback(() => {
-    setFilters(EMPTY_FILTERS);
-  }, []);
+    resetFilters();
+  }, [resetFilters]);
 
   const handleSurpriseMe = useCallback(() => {
     setIsSpinning(true);
     setPickedActivity(null);
     setTriedId(null);
-
     setTimeout(() => {
-      // Respect active filters; fall back to full list if nothing matches
       setPickedActivity(getRandomFromPool(filteredActivities));
       setIsSpinning(false);
     }, 700);
@@ -71,16 +73,11 @@ export function ActivityGrid() {
     setDetailActivity(found);
   }, []);
 
-  // ── Reroll: pick another random from the filtered pool ────
   const handleReroll = useCallback(() => {
     setIsSpinning(true);
     setTriedId(null);
-
     setTimeout(() => {
-      // exclude the current pick so we always get a different one
-      const pool = filteredActivities.filter(
-        (a) => a.id !== pickedActivity?.id,
-      );
+      const pool = filteredActivities.filter((a) => a.id !== pickedActivity?.id);
       setPickedActivity(getRandomFromPool(pool.length > 0 ? pool : filteredActivities));
       setIsSpinning(false);
     }, 500);
@@ -89,19 +86,23 @@ export function ActivityGrid() {
   const filtersActive = !isFiltersEmpty(filters);
 
   return (
-    <section
-      className={styles.section}
-      id="discover"
-      aria-labelledby="discover-heading"
-    >
-      {/* Detail modal — rendered at section root so it's above everything */}
+    <section className={styles.section} id="discover" aria-labelledby="discover-heading">
+
+      {/* Detail modal */}
       {detailActivity && (
         <ActivityDetail
           activity={detailActivity}
           onClose={() => setDetailActivity(null)}
           onTryThis={handleTryThis}
+          isFavourite={userData.isFavourite(detailActivity.id)}
+          onToggleFavourite={userData.toggleFavourite}
+          isCompleted={userData.isCompleted(detailActivity.id)}
+          onComplete={(id) => {
+            userData.completeActivity(id);
+          }}
         />
       )}
+
       {/* ── Section header ─────────────────────────────── */}
       <div className={styles.sectionHeader}>
         <div className={styles.sectionEyebrow} aria-hidden="true">
@@ -118,7 +119,7 @@ export function ActivityGrid() {
       {/* ── Surprise Me zone ──────────────────────────── */}
       <div className={styles.surpriseZone} role="region" aria-label="Random activity picker">
         <div className={styles.surpriseBox}>
-          <span className={styles.doodleStar}  aria-hidden="true">⭐</span>
+          <span className={styles.doodleStar}     aria-hidden="true">⭐</span>
           <span className={styles.doodleSparkle}  aria-hidden="true">✨</span>
           <span className={styles.doodleSparkle2} aria-hidden="true">🌟</span>
 
@@ -144,7 +145,6 @@ export function ActivityGrid() {
             {isSpinning ? 'Picking...' : '🎲 Surprise Me!'}
           </Button>
 
-          {/* Picked activity reveal */}
           {!isSpinning && pickedActivity && (
             <div
               className={styles.pickedReveal}
@@ -155,15 +155,15 @@ export function ActivityGrid() {
               <div className={styles.pickedLabel} aria-hidden="true">
                 🎉 your activity awaits!
               </div>
-
               <Card
                 activity={pickedActivity}
                 highlighted
                 onTryThis={handleTryThis}
                 onDetails={handleDetails}
+                isFavourite={userData.isFavourite(pickedActivity.id)}
+                onToggleFavourite={userData.toggleFavourite}
+                isCompleted={userData.isCompleted(pickedActivity.id)}
               />
-
-              {/* Reroll button */}
               <div className={styles.rerollRow}>
                 <Button
                   variant="ghost"
@@ -174,7 +174,6 @@ export function ActivityGrid() {
                   🔀 Pick another
                 </Button>
               </div>
-
               {triedId === pickedActivity.id && (
                 <p className={styles.triedMessage} role="status">
                   ✅ Awesome! Go enjoy your adventure. You can always pick again!
@@ -191,14 +190,10 @@ export function ActivityGrid() {
         </div>
       </div>
 
-      {/* ── Browse section: filters + grid ──────────────── */}
+      {/* ── Browse section ──────────────────────────────── */}
       <div className={styles.browseSection}>
-
-        {/* Browse heading row */}
         <div className={styles.browseHeader}>
           <h3 className={styles.browseTitle}>Or browse them all</h3>
-
-          {/* Mobile filter toggle */}
           <button
             type="button"
             className={styles.filterToggleBtn}
@@ -208,21 +203,15 @@ export function ActivityGrid() {
           >
             {panelOpen ? '✕ Hide filters' : '🎛️ Filters'}
             {filtersActive && (
-              <span className={styles.filterToggleBadge} aria-hidden="true">
-                ●
-              </span>
+              <span className={styles.filterToggleBadge} aria-hidden="true">●</span>
             )}
           </button>
         </div>
 
-        {/* Two-column layout: filter sidebar + results */}
         <div className={[styles.browseLayout, panelOpen ? styles.panelVisible : ''].join(' ')}>
-
-          {/* Filter panel — sticky sidebar on desktop, toggled on mobile */}
           <div
             id="filter-panel"
             className={[styles.filterSidebar, panelOpen ? styles.filterSidebarOpen : ''].join(' ')}
-            aria-hidden={!panelOpen && typeof window !== 'undefined' && window.innerWidth < 960}
           >
             <FilterPanel
               filters={filters}
@@ -233,10 +222,7 @@ export function ActivityGrid() {
             />
           </div>
 
-          {/* Results column */}
           <div className={styles.resultsCol}>
-
-            {/* Active filter summary strip */}
             {filtersActive && (
               <div className={styles.filterSummary} role="status" aria-live="polite">
                 <span className={styles.filterSummaryText}>
@@ -254,16 +240,11 @@ export function ActivityGrid() {
               </div>
             )}
 
-            {/* Grid or empty state */}
             {filteredActivities.length > 0 ? (
               <div
                 className={styles.grid}
                 role="list"
-                aria-label={
-                  filtersActive
-                    ? `${filteredActivities.length} matching activities`
-                    : 'All activities'
-                }
+                aria-label={filtersActive ? `${filteredActivities.length} matching activities` : 'All activities'}
               >
                 {filteredActivities.map((activity) => (
                   <div key={activity.id} role="listitem">
@@ -272,13 +253,12 @@ export function ActivityGrid() {
                       highlighted={activity.isFeatured}
                       onTryThis={handleTryThis}
                       onDetails={handleDetails}
+                      isFavourite={userData.isFavourite(activity.id)}
+                      onToggleFavourite={userData.toggleFavourite}
+                      isCompleted={userData.isCompleted(activity.id)}
                     />
                     {triedId === activity.id && (
-                      <p
-                        className={styles.triedMessageInline}
-                        role="status"
-                        aria-live="polite"
-                      >
+                      <p className={styles.triedMessageInline} role="status" aria-live="polite">
                         ✅ Go enjoy it!
                       </p>
                     )}
@@ -286,7 +266,6 @@ export function ActivityGrid() {
                 ))}
               </div>
             ) : (
-              /* Empty state */
               <div className={styles.emptyState} role="status" aria-live="polite">
                 <span className={styles.emptyEmoji} aria-hidden="true">🫥</span>
                 <p className={styles.emptyTitle}>No activities match your filters.</p>
@@ -302,24 +281,50 @@ export function ActivityGrid() {
         </div>
       </div>
 
-      {/* ── Featured picks ─────────────────────────────── */}
+      {/* ── Featured picks ───────────────────────────────── */}
       <div className={styles.featuredSection}>
-        <div className={styles.featuredLabel} aria-hidden="true">
-          ⭐ staff picks ⭐
-        </div>
+        <div className={styles.featuredLabel} aria-hidden="true">⭐ staff picks ⭐</div>
         <h3 className={styles.featuredTitle}>Today's Featured Picks</h3>
-        <div
-          className={styles.featuredGrid}
-          role="list"
-          aria-label="Featured activities"
-        >
+        <div className={styles.featuredGrid} role="list" aria-label="Featured activities">
           {featuredActivities.map((activity) => (
             <div key={activity.id} role="listitem">
-              <Card activity={activity} highlighted onTryThis={handleTryThis} onDetails={handleDetails} />
+              <Card
+                activity={activity}
+                highlighted
+                onTryThis={handleTryThis}
+                onDetails={handleDetails}
+                isFavourite={userData.isFavourite(activity.id)}
+                onToggleFavourite={userData.toggleFavourite}
+                isCompleted={userData.isCompleted(activity.id)}
+              />
             </div>
           ))}
         </div>
       </div>
+
+      {/* ── Shortcut to favourites/history ───────────────── */}
+      {(userData.favouriteIds.length > 0 || userData.completions.length > 0) && (
+        <div className={styles.userDataShortcut}>
+          {userData.favouriteIds.length > 0 && (
+            <button
+              type="button"
+              className={styles.shortcutBtn}
+              onClick={() => onOpenPanel('favourites')}
+            >
+              ❤️ View {userData.favouriteIds.length} saved
+            </button>
+          )}
+          {userData.completions.length > 0 && (
+            <button
+              type="button"
+              className={styles.shortcutBtn}
+              onClick={() => onOpenPanel('history')}
+            >
+              ✅ {userData.completions.length} completed
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 }

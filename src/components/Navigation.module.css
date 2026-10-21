@@ -232,3 +232,55 @@
   transform: translate(-2px, -2px);
   box-shadow: 5px 6px 0 rgba(26,16,48,0.40);
 }
+
+/* ── Icon group (favourites + history) ───────────────────── */
+.iconGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.iconBtn {
+  position: relative;
+  background: rgba(255,255,255,0.55);
+  border: 1.5px solid rgba(26,16,48,0.28);
+  border-radius: var(--radius-sm);
+  width: 38px;
+  height: 38px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base), background-color var(--transition-fast);
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.15);
+}
+.iconBtn:hover {
+  background: rgba(255,255,255,0.85);
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.20);
+}
+
+.iconBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--hotpink);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--electric);
+  pointer-events: none;
+}
