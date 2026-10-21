@@ -15,8 +15,8 @@ import type {
   Location,
   Company,
   DurationFilter,
-} from '../data/activities';
-import { DURATION_FILTER_MAP } from '../data/activities';
+} from '../data/types';
+import { DURATION_FILTER_MAP } from '../data/types';
 
 // ── Filter state type ─────────────────────────────────────────
 
