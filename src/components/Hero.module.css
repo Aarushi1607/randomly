@@ -1,0 +1,227 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-6) var(--space-12);
+  text-align: center;
+
+  /* Soft gradient backdrop */
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255, 107, 107, 0.12) 0%, transparent 70%),
+    var(--cream);
+
+  @media (max-width: 768px) {
+    min-height: 420px;
+    padding: var(--space-12) var(--space-4) var(--space-10);
+  }
+}
+
+/* ── Floating emoji doodles ──────────────────────────────────── */
+.floatingEmojis {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floatingEmoji {
+  position: absolute;
+  animation: float var(--dur, 3.5s) ease-in-out infinite;
+  user-select: none;
+  filter: blur(0.3px);
+}
+
+/* ── Main content ─────────────────────────────────────────────── */
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+/* ── Eyebrow label ─────────────────────────────────────────────── */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrowDoodle {
+  color: var(--coral);
+  font-size: 0.6rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* ── Heading ─────────────────────────────────────────────────── */
+.heading {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.headingAccent {
+  color: var(--coral);
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--butter);
+    border-radius: var(--radius-full);
+    opacity: 0.7;
+    transform: rotate(-1deg);
+  }
+}
+
+/* ── Subheading ──────────────────────────────────────────────── */
+.subheading {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--ink-soft);
+  line-height: 1.65;
+  max-width: 560px;
+
+  strong {
+    color: var(--ink);
+    font-weight: 800;
+  }
+}
+
+/* ── Stats ribbon ─────────────────────────────────────────────── */
+.statsRibbon {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--space-3) var(--space-8);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.statNum {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--coral);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.statDivider {
+  font-size: 1.5rem;
+  color: var(--border);
+  line-height: 1;
+}
+
+/* ── Scroll hint ─────────────────────────────────────────────── */
+.scrollHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--space-2);
+}
+
+.scrollArrow {
+  font-size: 1.4rem;
+  color: var(--coral);
+  animation: float 1.8s ease-in-out infinite;
+  display: block;
+}
+
+.scrollText {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Scrapbook sticker cluster ───────────────────────────────── */
+.stickerCluster {
+  position: absolute;
+  right: 5%;
+  top: 15%;
+  pointer-events: none;
+  z-index: 1;
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+.stickerStar {
+  position: absolute;
+  font-size: 2.5rem;
+  top: -20px;
+  right: 10px;
+  animation: spin-slow 12s linear infinite;
+  display: block;
+}
+
+.stickerStar2 {
+  position: absolute;
+  font-size: 1.2rem;
+  top: 10px;
+  right: -15px;
+  animation: spin-slow 8s linear infinite reverse;
+  display: block;
+}
+
+.stickerNote {
+  display: block;
+  background: var(--butter);
+  border: 2px solid var(--butter-dark);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+  text-align: center;
+  transform: rotate(5deg);
+  box-shadow: var(--shadow-card);
+  max-width: 130px;
+
+  em {
+    color: var(--coral-dark);
+    font-style: normal;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+}

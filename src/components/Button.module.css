@@ -1,0 +1,125 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: 700;
+  border: 2.5px solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    transform var(--transition-bounce),
+    box-shadow var(--transition-base),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.02em;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.96) !important;
+}
+
+/* ── Sizes ───────────────────────────────────────────────────── */
+.sm {
+  font-size: 0.8rem;
+  padding: var(--space-2) var(--space-4);
+  min-height: 34px;
+}
+
+.md {
+  font-size: 0.95rem;
+  padding: var(--space-3) var(--space-6);
+  min-height: 44px;
+}
+
+.lg {
+  font-size: 1.1rem;
+  padding: var(--space-4) var(--space-8);
+  min-height: 52px;
+}
+
+/* ── Variants ───────────────────────────────────────────────── */
+.primary {
+  background: var(--coral);
+  color: #fff;
+  border-color: var(--coral-dark);
+  box-shadow: 0 3px 0 var(--coral-dark);
+}
+.primary:hover:not(:disabled) {
+  background: var(--coral-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--coral-dark);
+}
+
+.secondary {
+  background: var(--butter);
+  color: var(--ink);
+  border-color: var(--butter-dark);
+  box-shadow: 0 3px 0 var(--butter-dark);
+}
+.secondary:hover:not(:disabled) {
+  background: var(--butter-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--butter-dark);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--border);
+}
+.ghost:hover:not(:disabled) {
+  background: var(--cream-dark);
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+
+/* ── Surprise Me — the hero button ──────────────────────────── */
+.surprise {
+  background: linear-gradient(135deg, var(--coral) 0%, var(--peach) 50%, var(--butter) 100%);
+  color: #fff;
+  border-color: var(--coral-dark);
+  box-shadow: 0 4px 0 var(--coral-dark), var(--shadow-md);
+  font-size: 1.2rem !important;
+  padding: var(--space-4) var(--space-10) !important;
+  min-height: 58px !important;
+  animation: pulse-ring 2.5s infinite;
+}
+.surprise:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 7px 0 var(--coral-dark), var(--shadow-lg);
+}
+
+/* ── Disabled / Loading ─────────────────────────────────────── */
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.loading {
+  cursor: wait;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin-slow 1s linear infinite;
+  font-style: normal;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.label {
+  line-height: 1;
+}

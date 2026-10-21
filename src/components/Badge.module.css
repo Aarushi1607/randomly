@@ -1,0 +1,33 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ── Sizes ───────────────────────────────────────────────────── */
+.sm {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+}
+.md {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+}
+
+/* ── Category colours ─────────────────────────────────────────
+   Each uses a light bg, vivid text, and a tinted border
+   ─────────────────────────────────────────────────────────── */
+.outdoor  { background: var(--mint-light);     color: var(--mint-dark);      border-color: var(--mint);     }
+.creative { background: var(--lavender-light); color: var(--lavender-dark);  border-color: var(--lavender); }
+.social   { background: var(--coral-light);    color: var(--coral-dark);     border-color: var(--coral);    }
+.learning { background: var(--sky-light);      color: var(--sky-dark);       border-color: var(--sky);      }
+.wellness { background: var(--peach-light);    color: var(--peach-dark);     border-color: var(--peach);    }
+.food     { background: var(--butter-light);   color: var(--butter-dark);    border-color: var(--butter);   }
+.gaming   { background: var(--lavender-light); color: var(--lavender-dark);  border-color: var(--lavender-dark); }
