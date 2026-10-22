@@ -6,6 +6,7 @@ import { ActivityGrid } from './components/ActivityGrid';
 import { Footer } from './components/Footer';
 import { UserDataPanel } from './components/UserDataPanel';
 import { ActivityDetail } from './components/ActivityDetail';
+import { AuthModal } from './components/AuthModal';
 import { useUserData } from './lib/useUserData';
 import { mockActivities } from './data/activities';
 import type { Activity } from './data/activities';
@@ -23,6 +24,9 @@ function App() {
     setPanelOpen(true);
   }, []);
 
+  // ── Auth modal ─────────────────────────────────────────────
+  const [authOpen, setAuthOpen] = useState(false);
+
   // ── Detail modal (opened from panel's history list) ───────
   const [detailActivity, setDetailActivity] = useState<Activity | null>(null);
 
@@ -37,6 +41,9 @@ function App() {
         favouriteCount={userData.favouriteIds.length}
         historyCount={userData.completions.length}
         onOpenPanel={openPanel}
+        onOpenAuth={() => setAuthOpen(true)}
+        isAuthenticated={userData.isAuthenticated}
+        userEmail={userData.user?.email}
       />
 
       <main id="main-content">
@@ -70,6 +77,17 @@ function App() {
           onComplete={userData.completeActivity}
         />
       )}
+
+      {/* ── Auth modal ──────────────────────────────────────── */}
+      <AuthModal
+        isOpen={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSignUp={userData.signUp}
+        onSignIn={userData.signIn}
+        onSignOut={userData.signOut}
+        isAuthenticated={userData.isAuthenticated}
+        userEmail={userData.user?.email}
+      />
     </div>
   );
 }
