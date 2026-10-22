@@ -1,0 +1,241 @@
+.dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  max-width: 420px;
+  width: 90%;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow:
+    0 0 0 100vmax rgba(26, 16, 48, 0.45),
+    6px 7px 0 rgba(26, 16, 48, 0.25);
+  color: var(--ink);
+}
+
+.dialog::backdrop {
+  background: rgba(26, 16, 48, 0.45);
+}
+
+.inner {
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color var(--transition-fast);
+}
+
+.closeBtn:hover {
+  background: var(--cream-dark);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.input {
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  border: 1.5px solid rgba(26, 16, 48, 0.25);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px rgba(27, 75, 255, 0.15);
+}
+
+.submitBtn {
+  margin-top: var(--space-2);
+  padding: 12px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--cobalt);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 2px 3px 0 rgba(26, 16, 48, 0.25);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26, 16, 48, 0.3);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.switchBtn {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cobalt);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.switchBtn:hover {
+  color: var(--cobalt-dark);
+}
+
+.note {
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.success {
+  padding: var(--space-3) var(--space-4);
+  background: var(--lime-light);
+  border: 1px solid var(--lime);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--lime-dark);
+  text-align: center;
+}
+
+.error {
+  padding: var(--space-3) var(--space-4);
+  background: var(--hotpink-light);
+  border: 1px solid var(--hotpink);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--hotpink-dark);
+  text-align: center;
+}
+
+/* Authenticated view */
+.authenticatedView {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--cobalt);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 900;
+}
+
+.userEmail {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.signedInText {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--lime-dark);
+  margin: 0;
+}
+
+.cloudNote {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 0;
+  max-width: 280px;
+}
+
+.signOutBtn {
+  margin-top: var(--space-3);
+  padding: 10px 24px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--hotpink-dark);
+  background: transparent;
+  border: 1.5px solid var(--hotpink);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.signOutBtn:hover:not(:disabled) {
+  background: var(--hotpink-light);
+}
+
+.signOutBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -18,12 +18,18 @@ interface NavigationProps {
   favouriteCount?: number;
   historyCount?: number;
   onOpenPanel?: (tab: UserDataPanelTab) => void;
+  onOpenAuth?: () => void;
+  isAuthenticated?: boolean;
+  userEmail?: string | null; // Reserved for future use (e.g., user avatar tooltip)
 }
 
 export function Navigation({
   favouriteCount = 0,
   historyCount   = 0,
   onOpenPanel,
+  onOpenAuth,
+  isAuthenticated = false,
+  userEmail,
 }: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -53,8 +59,18 @@ export function Navigation({
           ))}
         </ul>
 
-        {/* Icon buttons: favourites + history */}
+        {/* Icon buttons: user + favourites + history */}
         <div className={styles.iconGroup}>
+          {/* User account button */}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            onClick={onOpenAuth}
+            aria-label={isAuthenticated ? (userEmail ?? 'Account') : 'Sign in'}
+          >
+            <span aria-hidden="true">{isAuthenticated ? '👤' : '🔐'}</span>
+          </button>
+
           {onOpenPanel && (
             <>
               <button
