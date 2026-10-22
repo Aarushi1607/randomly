@@ -19,8 +19,9 @@ interface NavigationProps {
   historyCount?: number;
   onOpenPanel?: (tab: UserDataPanelTab) => void;
   onOpenAuth?: () => void;
+  onOpenAuthSignUp?: () => void;
   isAuthenticated?: boolean;
-  userEmail?: string | null; // Reserved for future use (e.g., user avatar tooltip)
+  userEmail?: string | null;
 }
 
 export function Navigation({
@@ -28,6 +29,7 @@ export function Navigation({
   historyCount   = 0,
   onOpenPanel,
   onOpenAuth,
+  onOpenAuthSignUp,
   isAuthenticated = false,
   userEmail,
 }: NavigationProps) {
@@ -61,15 +63,29 @@ export function Navigation({
 
         {/* Icon buttons: user + favourites + history */}
         <div className={styles.iconGroup}>
-          {/* User account button */}
-          <button
-            type="button"
-            className={styles.iconBtn}
-            onClick={onOpenAuth}
-            aria-label={isAuthenticated ? (userEmail ?? 'Account') : 'Sign in'}
-          >
-            <span aria-hidden="true">{isAuthenticated ? '👤' : '🔐'}</span>
-          </button>
+          {isAuthenticated ? (
+            /* User account dropdown when logged in */
+            <button
+              type="button"
+              className={styles.accountBtn}
+              onClick={onOpenAuth}
+              aria-label={userEmail ?? 'Account'}
+            >
+              <span aria-hidden="true">👤</span>
+              <span className={styles.accountLabel}>{userEmail?.split('@')[0] || 'Account'}</span>
+            </button>
+          ) : (
+            /* Sign In / Sign Up button for logged out users */
+            onOpenAuth && (
+              <button
+                type="button"
+                className={styles.authBtn}
+                onClick={onOpenAuth}
+              >
+                Sign In / Sign Up
+              </button>
+            )
+          )}
 
           {onOpenPanel && (
             <>
@@ -141,6 +157,45 @@ export function Navigation({
                 </a>
               </li>
             ))}
+            {/* Mobile auth buttons */}
+            {isAuthenticated ? (
+              <li>
+                <button
+                  type="button"
+                  className={styles.mobileLink}
+                  onClick={() => { onOpenAuth?.(); setMenuOpen(false); }}
+                >
+                  <span aria-hidden="true">👤</span>
+                  Account ({userEmail?.split('@')[0]})
+                </button>
+              </li>
+            ) : (
+              <>
+                {onOpenAuthSignUp && (
+                  <li>
+                    <button
+                      type="button"
+                      className={[styles.mobileLink, styles.mobileSignUpLink].join(' ')}
+                      onClick={() => { onOpenAuthSignUp(); setMenuOpen(false); }}
+                    >
+                      <span aria-hidden="true">✦</span>
+                      Sign Up
+                    </button>
+                  </li>
+                )}
+                <li>
+                  <button
+                    type="button"
+                    className={styles.mobileLink}
+                    onClick={() => { onOpenAuth?.(); setMenuOpen(false); }}
+                  >
+                    <span aria-hidden="true">🔐</span>
+                    Sign In
+                  </button>
+                </li>
+              </>
+            )}
+
             {onOpenPanel && (
               <>
                 <li>

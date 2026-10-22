@@ -284,3 +284,70 @@
   border: 1.5px solid var(--electric);
   pointer-events: none;
 }
+
+/* ── Sign In / Sign Up button ──────────────────────────────── */
+.authBtn {
+  font-family: var(--font-body);
+  font-weight: 900;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  background: var(--cobalt);
+  color: #fff;
+  border: 1.5px solid rgba(26,16,48,0.35);
+  border-radius: var(--radius-sm);
+  box-shadow: 2px 3px 0 rgba(26,16,48,0.25);
+  cursor: pointer;
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base);
+  white-space: nowrap;
+}
+
+.authBtn:hover {
+  color: #fff;
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.30);
+}
+
+/* ── Account button (logged in) ─────────────────────────────── */
+.accountBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.55);
+  border: 1.5px solid rgba(26,16,48,0.28);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(26,16,48,0.15);
+  transition: transform var(--transition-bounce), box-shadow var(--transition-base), background-color var(--transition-fast);
+}
+
+.accountBtn:hover {
+  background: rgba(255,255,255,0.85);
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 rgba(26,16,48,0.20);
+}
+
+.accountLabel {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Mobile Sign Up link style ─────────────────────────────── */
+.mobileSignUpLink {
+  background: var(--cobalt);
+  color: #fff;
+  border-color: var(--cobalt);
+}
+
+.mobileSignUpLink:hover {
+  background: var(--cobalt-dark);
+  color: #fff;
+}

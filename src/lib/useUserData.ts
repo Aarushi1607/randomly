@@ -146,36 +146,7 @@ async function removeCloudFavorite(userId: string, activityId: string): Promise<
   }
 }
 
-/** Sync local favorites to cloud (merge, preferring cloud for duplicates) */
-async function syncFavoritesToCloud(
-  userId: string,
-  localFavorites: string[]
-): Promise<string[]> {
-  // Fetch cloud favorites
-  const cloudFavorites = await fetchCloudFavorites(userId);
 
-  // Merge: local + cloud (deduplicated)
-  const merged = [...new Set([...localFavorites, ...cloudFavorites])];
-
-  // Push all to cloud (this ensures cloud is source of truth)
-  if (merged.length > 0) {
-    const inserts = merged.map((activityId) => ({
-      user_id: userId,
-      activity_id: activityId,
-    })) as { user_id: string; activity_id: string }[];
-
-    // Insert ignoring duplicates (RLS will handle permissions)
-    const { error } = await supabase
-      .from('favorites')
-      .upsert(inserts, { onConflict: 'user_id,activity_id' }) as { error: Error | null };
-
-    if (error) {
-      console.error('Error syncing favorites to cloud:', error);
-    }
-  }
-
-  return merged;
-}
 
 // ── Hook ──────────────────────────────────────────────────────
 
@@ -217,25 +188,37 @@ export function useUserData(): UserDataActions {
   }, []);
 
   // ── Auth: Sync favorites when user logs in ─────────────────
+  // Track the previous user to detect account switches
+  const prevUserId = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!user || initialFetchDone.current) return;
+    // If user changed (including sign-in, sign-out, or account switch),
+    // clear local favorites and re-fetch from cloud
+    const userIdChanged = prevUserId.current !== (user?.id ?? null);
+
+    if (!user) {
+      // User signed out - keep localStorage but don't sync to cloud
+      prevUserId.current = null;
+      initialFetchDone.current = false;
+      return;
+    }
+
+    if (userIdChanged) {
+      // Account switched - clear local data before loading cloud data
+      // This ensures no cross-account contamination for both favorites AND history
+      setUserData((prev) => ({ ...prev, favouriteIds: [], completions: [] }));
+      prevUserId.current = user.id;
+    }
+
+    if (initialFetchDone.current) return;
     initialFetchDone.current = true;
 
-    const localFavorites = userData.favouriteIds;
-
-    // If user has local favorites, merge with cloud
-    if (localFavorites.length > 0) {
-      syncFavoritesToCloud(user.id, localFavorites).then((merged) => {
-        setUserData((prev) => ({ ...prev, favouriteIds: merged }));
-      });
-    } else {
-      // Just fetch cloud favorites
-      fetchCloudFavorites(user.id).then((cloudFavorites) => {
-        if (cloudFavorites.length > 0) {
-          setUserData((prev) => ({ ...prev, favouriteIds: cloudFavorites }));
-        }
-      });
-    }
+    // Fetch cloud favorites for this user
+    fetchCloudFavorites(user.id).then((cloudFavorites) => {
+      if (cloudFavorites.length > 0) {
+        setUserData((prev) => ({ ...prev, favouriteIds: cloudFavorites }));
+      }
+    });
   }, [user]);
 
   // Derived set for O(1) lookup
@@ -340,8 +323,9 @@ export function useUserData(): UserDataActions {
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     // Keep local favorites when signing out (user can log in again later)
-    // Clear the flag so next login will re-fetch from cloud
+    // Clear the flags so next login will re-fetch from cloud
     initialFetchDone.current = false;
+    prevUserId.current = null;
   }, []);
 
   return {

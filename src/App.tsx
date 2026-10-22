@@ -26,6 +26,17 @@ function App() {
 
   // ── Auth modal ─────────────────────────────────────────────
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+
+  const openAuthSignUp = useCallback(() => {
+    setAuthMode('signup');
+    setAuthOpen(true);
+  }, []);
+
+  const openAuthSignIn = useCallback(() => {
+    setAuthMode('signin');
+    setAuthOpen(true);
+  }, []);
 
   // ── Detail modal (opened from panel's history list) ───────
   const [detailActivity, setDetailActivity] = useState<Activity | null>(null);
@@ -41,7 +52,8 @@ function App() {
         favouriteCount={userData.favouriteIds.length}
         historyCount={userData.completions.length}
         onOpenPanel={openPanel}
-        onOpenAuth={() => setAuthOpen(true)}
+        onOpenAuth={openAuthSignIn}
+        onOpenAuthSignUp={openAuthSignUp}
         isAuthenticated={userData.isAuthenticated}
         userEmail={userData.user?.email}
       />
@@ -87,6 +99,7 @@ function App() {
         onSignOut={userData.signOut}
         isAuthenticated={userData.isAuthenticated}
         userEmail={userData.user?.email}
+        initialMode={authMode}
       />
     </div>
   );

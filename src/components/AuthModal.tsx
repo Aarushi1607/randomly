@@ -15,6 +15,7 @@ interface AuthModalProps {
   onSignOut: () => Promise<void>;
   isAuthenticated: boolean;
   userEmail?: string | null;
+  initialMode?: 'signin' | 'signup';
 }
 
 export function AuthModal({
@@ -25,8 +26,9 @@ export function AuthModal({
   onSignOut,
   isAuthenticated,
   userEmail,
+  initialMode = 'signin',
 }: AuthModalProps) {
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -48,6 +50,13 @@ export function AuthModal({
     }
   }, [isOpen]);
 
+  // Sync mode with initialMode when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+    }
+  }, [initialMode, isOpen]);
+
   // Clear form when closing
   useEffect(() => {
     if (!isOpen) {
@@ -55,9 +64,9 @@ export function AuthModal({
       setPassword('');
       setError(null);
       setSuccess(null);
-      setMode('signin');
+      setMode(initialMode);
     }
-  }, [isOpen]);
+  }, [isOpen, initialMode]);
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     const rect = dialogRef.current?.getBoundingClientRect();
