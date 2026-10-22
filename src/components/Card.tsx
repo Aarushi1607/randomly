@@ -38,20 +38,18 @@ function tintIndex(id: string) {
 export interface CardProps {
   activity: Activity;
   highlighted?: boolean;
-  onTryThis?: (id: string) => void;
+  /** Opens the detail modal for this activity — the primary card action */
   onDetails?: (id: string) => void;
-  /** Whether this activity is currently favourited */
+  /** Kept for compatibility; reserved for future "mark as tried" flow */
+  onTryThis?: (id: string) => void;
   isFavourite?: boolean;
-  /** Called when the heart button is clicked */
   onToggleFavourite?: (id: string) => void;
-  /** Whether this activity has been completed at least once */
   isCompleted?: boolean;
 }
 
 export function Card({
   activity,
   highlighted = false,
-  onTryThis,
   onDetails,
   isFavourite = false,
   onToggleFavourite,
@@ -97,23 +95,10 @@ export function Card({
         </div>
       </div>
 
-      {/* ── Emoji sticker ── */}
+      {/* ── Emoji sticker (decorative, top-right) ── */}
       <div className={styles.emojiSticker} aria-hidden="true">
         {emoji}
       </div>
-
-      {/* ── Favourite button ── */}
-      {onToggleFavourite && (
-        <button
-          type="button"
-          className={[styles.heartBtn, isFavourite ? styles.heartActive : ''].join(' ')}
-          onClick={() => onToggleFavourite(id)}
-          aria-label={isFavourite ? `Remove "${title}" from favourites` : `Add "${title}" to favourites`}
-          aria-pressed={isFavourite}
-        >
-          {isFavourite ? '❤️' : '🤍'}
-        </button>
-      )}
 
       {/* ── Body ── */}
       <div className={styles.body}>
@@ -139,7 +124,7 @@ export function Card({
         </ul>
       </div>
 
-      {/* ── Footer ── */}
+      {/* ── Footer: difficulty · heart · Details button ── */}
       <div className={styles.footer}>
         <span
           className={styles.difficulty}
@@ -150,22 +135,26 @@ export function Card({
         </span>
 
         <div className={styles.footerActions}>
-          {onDetails && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onDetails(id)}
-              aria-label={`View full details for "${title}"`}
+          {/* Heart — stops propagation so it doesn't trigger onDetails */}
+          {onToggleFavourite && (
+            <button
+              type="button"
+              className={[styles.heartBtn, isFavourite ? styles.heartActive : ''].join(' ')}
+              onClick={(e) => { e.stopPropagation(); onToggleFavourite(id); }}
+              aria-label={isFavourite ? `Remove "${title}" from favourites` : `Add "${title}" to favourites`}
+              aria-pressed={isFavourite}
             >
-              Details
-            </Button>
+              {isFavourite ? '❤️' : '🤍'}
+            </button>
           )}
-          {onTryThis && (
+
+          {/* Let's Go opens the detail modal */}
+          {onDetails && (
             <Button
               variant="primary"
               size="sm"
-              onClick={() => onTryThis(id)}
-              aria-label={`I'll do "${title}"`}
+              onClick={() => onDetails(id)}
+              aria-label={`View details for "${title}"`}
             >
               Let's Go! →
             </Button>

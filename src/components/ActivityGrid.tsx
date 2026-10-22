@@ -23,7 +23,6 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
   // ── Surprise Me state ─────────────────────────────────────
   const [pickedActivity, setPickedActivity] = useState<Activity | null>(null);
   const [isSpinning,     setIsSpinning]     = useState(false);
-  const [triedId,        setTriedId]        = useState<string | null>(null);
 
   // ── Panel open/close (mobile filters) ─────────────────────
   const [panelOpen, setPanelOpen] = useState(false);
@@ -57,16 +56,11 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
   const handleSurpriseMe = useCallback(() => {
     setIsSpinning(true);
     setPickedActivity(null);
-    setTriedId(null);
     setTimeout(() => {
       setPickedActivity(getRandomFromPool(filteredActivities));
       setIsSpinning(false);
     }, 700);
   }, [filteredActivities]);
-
-  const handleTryThis = useCallback((id: string) => {
-    setTriedId(id);
-  }, []);
 
   const handleDetails = useCallback((id: string) => {
     const found = mockActivities.find((a) => a.id === id) ?? null;
@@ -75,7 +69,6 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
 
   const handleReroll = useCallback(() => {
     setIsSpinning(true);
-    setTriedId(null);
     setTimeout(() => {
       const pool = filteredActivities.filter((a) => a.id !== pickedActivity?.id);
       setPickedActivity(getRandomFromPool(pool.length > 0 ? pool : filteredActivities));
@@ -93,7 +86,6 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
         <ActivityDetail
           activity={detailActivity}
           onClose={() => setDetailActivity(null)}
-          onTryThis={handleTryThis}
           isFavourite={userData.isFavourite(detailActivity.id)}
           onToggleFavourite={userData.toggleFavourite}
           isCompleted={userData.isCompleted(detailActivity.id)}
@@ -106,7 +98,7 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
       {/* ── Section header ─────────────────────────────── */}
       <div className={styles.sectionHeader}>
         <div className={styles.sectionEyebrow} aria-hidden="true">
-          🗺️ what should i do today?
+          what should i do today?
         </div>
         <h2 id="discover-heading" className={styles.sectionTitle}>
           Discover Something New
@@ -119,9 +111,7 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
       {/* ── Surprise Me zone ──────────────────────────── */}
       <div className={styles.surpriseZone} role="region" aria-label="Random activity picker">
         <div className={styles.surpriseBox}>
-          <span className={styles.doodleStar}     aria-hidden="true">⭐</span>
-          <span className={styles.doodleSparkle}  aria-hidden="true">✨</span>
-          <span className={styles.doodleSparkle2} aria-hidden="true">🌟</span>
+          
 
           <p className={styles.surpriseTagline}>
             {filtersActive
@@ -142,7 +132,7 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
                 : 'Pick a random activity for me'
             }
           >
-            {isSpinning ? 'Picking...' : '🎲 Surprise Me!'}
+            {isSpinning ? 'Picking...' : 'Surprise Me!'}
           </Button>
 
           {!isSpinning && pickedActivity && (
@@ -153,12 +143,11 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
               aria-label={`Random activity picked: ${pickedActivity.title}`}
             >
               <div className={styles.pickedLabel} aria-hidden="true">
-                🎉 your activity awaits!
+                your activity awaits!
               </div>
               <Card
                 activity={pickedActivity}
                 highlighted
-                onTryThis={handleTryThis}
                 onDetails={handleDetails}
                 isFavourite={userData.isFavourite(pickedActivity.id)}
                 onToggleFavourite={userData.toggleFavourite}
@@ -171,20 +160,15 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
                   onClick={handleReroll}
                   aria-label="Pick a different random activity"
                 >
-                  🔀 Pick another
+                  Pick another
                 </Button>
               </div>
-              {triedId === pickedActivity.id && (
-                <p className={styles.triedMessage} role="status">
-                  ✅ Awesome! Go enjoy your adventure. You can always pick again!
-                </p>
-              )}
             </div>
           )}
 
           {!isSpinning && !pickedActivity && (
             <p className={styles.emptyHint} aria-hidden="true">
-              👆 press the button, i dare you
+              press the button, i dare you
             </p>
           )}
         </div>
@@ -251,17 +235,11 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
                     <Card
                       activity={activity}
                       highlighted={activity.isFeatured}
-                      onTryThis={handleTryThis}
                       onDetails={handleDetails}
                       isFavourite={userData.isFavourite(activity.id)}
                       onToggleFavourite={userData.toggleFavourite}
                       isCompleted={userData.isCompleted(activity.id)}
                     />
-                    {triedId === activity.id && (
-                      <p className={styles.triedMessageInline} role="status" aria-live="polite">
-                        ✅ Go enjoy it!
-                      </p>
-                    )}
                   </div>
                 ))}
               </div>
@@ -291,7 +269,6 @@ export function ActivityGrid({ userData, onOpenPanel }: ActivityGridProps) {
               <Card
                 activity={activity}
                 highlighted
-                onTryThis={handleTryThis}
                 onDetails={handleDetails}
                 isFavourite={userData.isFavourite(activity.id)}
                 onToggleFavourite={userData.toggleFavourite}

@@ -101,7 +101,7 @@ export function FilterPanel({
       {/* ── Panel header ──────────────────────────────── */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
-          <span className={styles.title} aria-hidden="true">🎛️ Filters</span>
+          <span className={styles.title} aria-hidden="true">Filters</span>
           {activeCount > 0 && (
             <span className={styles.activeBadge} aria-label={`${activeCount} active filter${activeCount > 1 ? 's' : ''}`}>
               {activeCount}
@@ -113,7 +113,7 @@ export function FilterPanel({
           <span className={styles.matchCount} aria-live="polite" aria-atomic="true">
             {matchCount === totalCount
               ? `${totalCount} activities`
-              : `${matchCount} of ${totalCount}`}
+              : `${matchCount} of ${totalCount} activities`}
           </span>
           {activeCount > 0 && (
             <button
@@ -122,7 +122,7 @@ export function FilterPanel({
               onClick={onReset}
               aria-label="Clear all filters"
             >
-              ✕ Clear
+              Clear
             </button>
           )}
         </div>
@@ -217,7 +217,7 @@ export function FilterPanel({
       {/* ── Empty state inside panel ───────────────────── */}
       {matchCount === 0 && (
         <div className={styles.panelEmpty} role="status">
-          <span aria-hidden="true">🙈</span>
+          <span aria-hidden="true" style={{ fontSize: '2rem', display: 'block', marginBottom: '0.5rem' }}>∅</span>
           <p>Nothing matches yet — try fewer filters.</p>
           <button
             type="button"

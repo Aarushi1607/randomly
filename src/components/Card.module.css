@@ -102,11 +102,12 @@
 /* ── Body ──────────────────────────────────────────────── */
 .body {
   padding: var(--space-4) var(--space-4) var(--space-3);
+  /* right-pad clears the emoji sticker (2.6rem ≈ 42px + 14px offset = ~56px) */
+  padding-right: 60px;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   flex: 1;
-  padding-right: 64px;
 }
 
 .title {
@@ -252,28 +253,25 @@
   line-height: 1;
 }
 
-/* ── Favourite heart button ──────────────────────────────── */
+/* ── Favourite heart button — in footer row ──────────────── */
 .heartBtn {
-  position: absolute;
-  top: 36px;
-  left: 12px;
-  z-index: 3;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.75);
   border: 1.5px solid rgba(26,16,48,0.18);
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 0.95rem;
+  width: 30px;
+  height: 30px;
+  font-size: 0.88rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: transform var(--transition-bounce), background-color var(--transition-fast);
-  box-shadow: 1px 2px 0 rgba(26,16,48,0.12);
+  box-shadow: 1px 2px 0 rgba(26,16,48,0.10);
 }
 .heartBtn:hover {
-  transform: scale(1.2);
+  transform: scale(1.18);
   background: rgba(255,255,255,0.98);
 }
 .heartActive {
