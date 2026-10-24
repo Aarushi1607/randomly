@@ -156,6 +156,7 @@ Potential enhancements for future versions include:
 - Additional accessibility improvements
 - Automated deployment and CI/CD
 - Containerisation and cloud deployment
+-Community Suggestions & Moderation: Add a suggestion button allowing users to submit new activity ideas, visible only to the admin for review and approval or rejection before approved suggestions are added to the activity collection.
 
 These are possible future enhancements, not claims about features already implemented.
 
