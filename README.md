@@ -147,8 +147,6 @@ Key areas to validate include:
 
 ## 🔮 Future Improvements
 
-Potential enhancements for future versions include:
-
 - More activity categories and personalised recommendations
 - Better discovery based on mood, available time, and interests
 - Optional activity timers and progress tracking
