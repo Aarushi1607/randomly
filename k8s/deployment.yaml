@@ -1,0 +1,21 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: randomly-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: randomly
+  template:
+    metadata:
+      labels:
+        app: randomly
+    spec:
+      containers:
+        - name: randomly
+          image: randomly:cca2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80

@@ -51,11 +51,9 @@ Make sure you have installed:
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone https://github.com/Aarushi1607/randomly
 cd randomly
 ```
-
-Replace `<YOUR_GITHUB_REPOSITORY_URL>` with your actual GitHub repository URL.
 
 ### 2. Install dependencies
 
