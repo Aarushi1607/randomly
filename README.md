@@ -407,9 +407,10 @@ Contributions, ideas, and bug reports are welcome!
 
 ---
 
-## 👥 Team
-
-**Randomly** is a collaborative project built as a college CCA 2 DevOps assignment by a two-person team.
+## 👤 Author
+Aarushi
+B.Tech Computer Science and Engineering
+CCA 2 – DevOps Project
 
 ---
 
